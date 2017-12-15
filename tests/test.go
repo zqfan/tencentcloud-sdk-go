@@ -10,7 +10,8 @@ import (
 func main() {
     client := client.NewClient(os.Getenv("QCLOUD_SECRET_ID"),
                                os.Getenv("QCLOUD_SECRET_KEY"),
-                               "gz")
+                               "ap-guangzhou")
+    client.Debug = true
 
     params := map[string]string {
         "Action": "DescribeInstances",

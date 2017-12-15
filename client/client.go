@@ -16,6 +16,88 @@ import (
 )
 
 
+type Client struct {
+    Debug bool
+    secretId string
+    secretKey string
+    region string
+    method string
+}
+
+
+func NewClient(secretId, secretKey, region string) *Client {
+    client := &Client{}
+    client.secretId = secretId
+    client.secretKey = secretKey
+    client.region = region
+    return client
+}
+
+
+func (c *Client) SendRequest(mod string, params map[string]string) (response string, err error) {
+    secretId := c.secretId
+    secretKey := c.secretKey
+
+    method := "POST"
+    host := mod + ".api.qcloud.com"
+    path := "/v2/index.php"
+
+    paramValues := url.Values{}
+    if params["SecretId"] == "" {
+        params["SecretId"] = secretId
+    }
+    if params["Timestamp"] == "" {
+        params["Timestamp"] = fmt.Sprintf("%v", time.Now().Unix())
+    }
+    if params["Nonce"] == "" {
+        rand.Seed(time.Now().UnixNano())
+        params["Nonce"] = fmt.Sprintf("%v", rand.Int())
+    }
+    if params["Region"] == "" {
+        params["Region"] = "ap-guangzhou"
+    }
+
+    sign, err := sign(method, host, path, params, secretKey)
+    paramValues.Add("Signature", sign)
+
+    for k, v := range params {
+        paramValues.Add(k, v)
+    }
+
+    url := "https://" + host + path
+
+    if c.Debug == true {
+        log.Println("[DEBUG]", url, paramValues)
+    }
+
+    rsp, err := http.PostForm(url, paramValues)
+
+    if err != nil {
+        panic(err)
+        log.Fatal("http post error.", err)
+        return "", err
+    }
+
+    if c.Debug == true {
+        log.Println("[DEBUG]", rsp)
+    }
+
+    defer rsp.Body.Close()
+
+    buf, err := ioutil.ReadAll(rsp.Body)
+    if err != err {
+        panic(err)
+        return "", err
+    }
+
+    if c.Debug == true {
+        log.Println("[DEBUG]", string(buf))
+    }
+
+    return string(buf), nil
+}
+
+
 func getSignText(method string, host string, path string, params map[string] string) (text string, err error) {
     method = strings.ToUpper(method)
 
@@ -39,6 +121,7 @@ func getSignText(method string, host string, path string, params map[string] str
     return text, nil
 }
 
+
 func sign(method string, host string, path string, params map[string]string, secretKey string) (sign string, err error) {
     var source string
     source, err = getSignText(method, host, path, params)
@@ -53,71 +136,4 @@ func sign(method string, host string, path string, params map[string]string, sec
 
     sign = base64.StdEncoding.EncodeToString(hashed.Sum(nil))
     return sign, nil
-}
-
-type Client struct {
-    secretId string
-    secretKey string
-    region string
-    method string
-}
-
-func (c *Client) SendRequest(mod string, params map[string]string) (response string, err error) {
-    secretId := c.secretId
-    secretKey := c.secretKey
-
-    method := "POST"
-    host := mod + ".api.qcloud.com"
-    path := "/v2/index.php"
-
-    paramValues := url.Values{}
-    if params["SecretId"] == "" {
-        params["SecretId"] = secretId
-    }
-    if params["Timestamp"] == "" {
-        params["Timestamp"] = fmt.Sprintf("%v", time.Now().Unix())
-        fmt.Println(params["Timestamp"])
-    }
-    if params["Nonce"] == "" {
-        rand.Seed(time.Now().UnixNano())
-        params["Nonce"] = fmt.Sprintf("%v", rand.Int())
-    }
-    if params["Region"] == "" {
-        params["Region"] = "gz"
-    }
-
-    sign, err := sign(method, host, path, params, secretKey)
-    paramValues.Add("Signature", sign)
-
-    for k, v := range params {
-        paramValues.Add(k, v)
-    }
-
-    url := "https://" + host + path
-
-    rsp, err := http.PostForm(url, paramValues)
-
-    if err != nil {
-        panic(err)
-        log.Fatal("http post error.", err)
-        return "", err
-    }
-
-    defer rsp.Body.Close()
-
-    buf, err := ioutil.ReadAll(rsp.Body)
-    if err != err {
-        panic(err)
-        return "", err
-    }
-
-    return string(buf), nil
-}
-
-func NewClient(secretId, secretKey, region string) *Client {
-    client := &Client{}
-    client.secretId = secretId
-    client.secretKey = secretKey
-    client.region = region
-    return client
 }
