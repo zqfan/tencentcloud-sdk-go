@@ -37,15 +37,14 @@ func NewClient(secretId, secretKey, region string) *Client {
 func (c *Client) SendRequest(mod string, params map[string]string) (response string, err error) {
     secretId := c.secretId
     secretKey := c.secretKey
+    region := c.region
 
     method := "POST"
     host := mod + ".api.qcloud.com"
     path := "/v2/index.php"
 
     paramValues := url.Values{}
-    if params["SecretId"] == "" {
-        params["SecretId"] = secretId
-    }
+    params["SecretId"] = secretId
     if params["Timestamp"] == "" {
         params["Timestamp"] = fmt.Sprintf("%v", time.Now().Unix())
     }
@@ -54,7 +53,7 @@ func (c *Client) SendRequest(mod string, params map[string]string) (response str
         params["Nonce"] = fmt.Sprintf("%v", rand.Int())
     }
     if params["Region"] == "" {
-        params["Region"] = "ap-guangzhou"
+        params["Region"] = region
     }
 
     sign, err := sign(method, host, path, params, secretKey)

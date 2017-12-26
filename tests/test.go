@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-    client := client.NewClient(os.Getenv("QCLOUD_SECRET_ID"),
-                               os.Getenv("QCLOUD_SECRET_KEY"),
+    client := client.NewClient(os.Getenv("TENCENTCLOUD_SECRET_ID"),
+                               os.Getenv("TENCENTCLOUD_SECRET_KEY"),
                                "ap-guangzhou")
     client.Debug = true
 
