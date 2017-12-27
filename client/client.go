@@ -69,7 +69,6 @@ func (c *Client) SendRequest(mod string, params map[string]string) (response str
 	rsp, err := http.PostForm(url, paramValues)
 
 	if err != nil {
-		panic(err)
 		log.Fatal("http post error.", err)
 		return "", err
 	}
@@ -78,7 +77,6 @@ func (c *Client) SendRequest(mod string, params map[string]string) (response str
 
 	buf, err := ioutil.ReadAll(rsp.Body)
 	if err != err {
-		panic(err)
 		return "", err
 	}
 
@@ -116,9 +114,8 @@ func sign(method string, host string, path string, params map[string]string, sec
 	var source string
 	source, err = getSignText(method, host, path, params)
 	if err != nil {
-		panic(err)
 		log.Fatalln("Make PlainText error.", err)
-		return sign, err
+		return "", err
 	}
 
 	hashed := hmac.New(sha1.New, []byte(secretKey))
