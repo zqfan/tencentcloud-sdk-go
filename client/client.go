@@ -63,7 +63,7 @@ func (c *Client) SendRequest(mod string, params map[string]string) (response str
 	url := "https://" + host + path
 
 	if c.Debug == true {
-		log.Printf("[DEBUG] [tencentcloud-sdk-go] url=%v, action=%v, params=%v", url, params["Action"], paramValues)
+		log.Printf("[DEBUG] [tencentcloud-sdk-go] request start: action=%v, url=%v, params=%v", params["Action"], url, paramValues)
 	}
 
 	rsp, err := http.PostForm(url, paramValues)
@@ -81,7 +81,8 @@ func (c *Client) SendRequest(mod string, params map[string]string) (response str
 	}
 
 	if c.Debug == true {
-		log.Printf("[DEBUG] [tencentcloud-sdk-go] response=%v", string(buf))
+		log.Printf("[DEBUG] [tencentcloud-sdk-go] request ended: action=%v, url=%v, params=%v, response=%v",
+			params["Action"], url, paramValues, string(buf))
 	}
 
 	return string(buf), nil
