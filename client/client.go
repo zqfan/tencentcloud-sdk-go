@@ -3,6 +3,7 @@ package client
 import (
 	"crypto/hmac"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -120,6 +121,11 @@ func sign(method string, host string, path string, params map[string]string, sec
 	}
 
 	hashed := hmac.New(sha1.New, []byte(secretKey))
+	if sm, ok := params["SignatureMethod"]; ok {
+		if sm == "HmacSHA256" {
+			hashed = hmac.New(sha256.New, []byte(secretKey))
+		}
+	}
 	hashed.Write([]byte(source))
 
 	sign = base64.StdEncoding.EncodeToString(hashed.Sum(nil))
