@@ -1,6 +1,25 @@
-# qcloud-sdk-go
+# tencentcloud-sdk-go
 
-## Example
+## Dedicated API example
+
+```
+package main
+
+import (
+    "github.com/zqfan/tencentcloud-sdk-go/service/cvm"
+)
+
+func main() {
+    client, _ := cvm.NewClientWithSecretID("YOUR_SECRET_ID", "YOUR_SECRET_KEY", "REGION_NAME")
+    request := NewDescribeAddressesRequest()
+    request.Limit = "10"
+    // get response structure
+    response, err := c.DescribeAddresses(request)
+    eips := response.Response.AddressSet
+}
+```
+
+## Common API Example
 
 ```
 package main

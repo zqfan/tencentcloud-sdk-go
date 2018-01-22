@@ -11,7 +11,6 @@ func newClient() *Client {
 		os.Getenv("TENCENTCLOUD_SECRET_ID"),
 		os.Getenv("TENCENTCLOUD_SECRET_KEY"),
 		"ap-guangzhou")
-	client.Debug = true
 	return client
 }
 
@@ -44,7 +43,6 @@ func testSignatureMethod(t *testing.T, method string, funcName string) {
 	if jsonresp.Response.Error.Code == "InvalidParameter.SignatureFailure" {
 		t.Errorf("Auth Failure %s", funcName)
 	}
-	//t.Logf("PASS %s", funcName)
 }
 
 func TestSignatureMethodSHA256(t *testing.T) {
