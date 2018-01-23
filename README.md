@@ -6,16 +6,28 @@
 package main
 
 import (
-    "github.com/zqfan/tencentcloud-sdk-go/service/cvm"
+    "github.com/zqfan/tencentcloud-sdk-go/common"
+    "github.com/zqfan/tencentcloud-sdk-go/services/cvm"
+    "fmt"
 )
 
 func main() {
-    client, _ := cvm.NewClientWithSecretID("YOUR_SECRET_ID", "YOUR_SECRET_KEY", "REGION_NAME")
-    request := NewDescribeAddressesRequest()
+    client, _ := cvm.NewClientWithSecretId("YOUR_SECRET_ID", "YOUR_SECRET_KEY", "REGION_NAME")
+    request := cvm.NewDescribeAddressesRequest()
     request.Limit = "10"
     // get response structure
-    response, err := c.DescribeAddresses(request)
+    response, err := client.DescribeAddresses(request)
+    // API errors
+    if _, ok := err.(*common.APIError); ok {
+        fmt.Printf("An API error has returned: %s", err)
+        return
+    }
+    // unexpected errors
+    if err != nil {
+        panic(err)
+    }
     eips := response.Response.AddressSet
+    fmt.Println(eips)
 }
 ```
 

@@ -117,7 +117,7 @@ func getUrlQueriesEncoded(params map[string]string) string {
 func (r *BaseRequest) GetBodyReader() io.Reader {
 	if r.httpMethod == POST {
 		s := getUrlQueriesEncoded(r.params)
-		log.Printf("[DEBUG] body: %s", s)
+		//log.Printf("[DEBUG] body: %s", s)
 		return strings.NewReader(s)
 	} else {
 		return strings.NewReader("")
@@ -157,50 +157,63 @@ func CompleteCommonParams(request Request, c *Client) {
 func ConstructParams(req Request) (err error) {
 	value := reflect.ValueOf(req).Elem()
 	err = flatStructure(value, req, "")
-	log.Printf("[DEBUG] params=%s", req.GetParams())
+	//log.Printf("[DEBUG] params=%s", req.GetParams())
 	return
 }
 
 func flatStructure(value reflect.Value, request Request, prefix string) (err error) {
+	//log.Printf("[DEBUG] reflect value: %v", value.Type())
 	valueType := value.Type()
 	for i := 0; i < valueType.NumField(); i++ {
 		tag := valueType.Field(i).Tag
-		log.Printf("[DEBUG] tag=%s, type=%s, value=%s", tag, valueType.Field(i), value.Field(i))
 		nameTag, hasNameTag := tag.Lookup("name")
 		if !hasNameTag {
 			continue
 		}
-		_, hasListTag := tag.Lookup("list")
-		if !hasListTag {
-			key := prefix + nameTag
-			v := value.Field(i)
-			var vs string
-			if v.Type().String() == "string" {
-				vs = v.String()
-			} else if v.Type().String() == "int" {
-				vs = strconv.FormatInt(v.Int(), 10)
+		field := value.Field(i)
+		kind := field.Kind()
+		if kind == reflect.Ptr && field.IsNil() {
+			continue
+		}
+		if kind == reflect.Ptr {
+			field = field.Elem()
+			kind = field.Kind()
+		}
+		key := prefix + nameTag
+		if kind == reflect.String {
+			s := field.String()
+			if s != "" {
+				request.GetParams()[key] = s
 			}
-			request.GetParams()[key] = vs
-		} else {
+		} else if kind == reflect.Int {
+			request.GetParams()[key] = strconv.FormatInt(field.Int(), 10)
+		} else if kind == reflect.Float64 {
+			request.GetParams()[key] = strconv.FormatFloat(field.Float(), 'f', 4, 64)
+		} else if kind == reflect.Slice {
 			list := value.Field(i)
-			if list.Kind() != reflect.Slice {
-				list = list.Elem()
-			}
-			if !list.IsValid() || list.IsNil() {
-				continue
-			}
 			for j := 0; j < list.Len(); j++ {
 				vj := list.Index(j)
 				key := prefix + nameTag + "." + strconv.Itoa(j)
-				if vj.Type().String() == "string" {
+				kind = vj.Kind()
+				if kind == reflect.Ptr && vj.IsNil() {
+					continue
+				}
+				if kind == reflect.Ptr {
+					vj = vj.Elem()
+					kind = vj.Kind()
+				}
+				if kind == reflect.String {
 					request.GetParams()[key] = vj.String()
+				} else if kind == reflect.Int {
+					request.GetParams()[key] = strconv.FormatInt(vj.Int(), 10)
+				} else if kind == reflect.Float64 {
+					request.GetParams()[key] = strconv.FormatFloat(vj.Float(), 'f', 4, 64)
 				} else {
-					err = flatStructure(vj, request, key+".")
-					if err != nil {
-						return
-					}
+					flatStructure(vj, request, key+".")
 				}
 			}
+		} else {
+			flatStructure(reflect.ValueOf(field.Interface()), request, prefix+nameTag+".")
 		}
 	}
 	return

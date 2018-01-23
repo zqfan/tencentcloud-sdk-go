@@ -35,6 +35,7 @@ func checkAuthParams(request Request, credential Credential, method string) {
 		params[key] = value
 	}
 	params["SignatureMethod"] = method
+	delete(params, "Signature")
 }
 
 func getStringToSign(request Request) string {

@@ -8,15 +8,32 @@ import (
 )
 
 type Response interface {
-	GetHttpContentBytes() []byte
+	ParseErrorFromHTTPResponse(body []byte) error
 }
 
 type BaseResponse struct {
-	httpContentBytes []byte
 }
 
-func (r *BaseResponse) GetHttpContentBytes() []byte {
-	return r.httpContentBytes
+type ErrorResponse struct {
+	Response struct {
+		Error struct {
+			Code    string `json:"Code"`
+			Message string `json:"Message"`
+		} `json:"Error" omitempty`
+		RequestId string `json:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
+	resp := &ErrorResponse{}
+	err = json.Unmarshal(body, resp)
+	if err != nil {
+		return
+	}
+	if resp.Response.Error.Code != "" {
+		return NewAPIError(resp.Response.Error.Code, resp.Response.Error.Message, -1)
+	}
+	return nil
 }
 
 func ParseFromHttpResponse(hr *http.Response, response Response) (err error) {
@@ -26,6 +43,10 @@ func ParseFromHttpResponse(hr *http.Response, response Response) (err error) {
 		return
 	}
 	log.Printf("[DEBUG] Response Body=%s", body)
+	err = response.ParseErrorFromHTTPResponse(body)
+	if err != nil {
+		return
+	}
 	err = json.Unmarshal(body, &response)
 	return
 }

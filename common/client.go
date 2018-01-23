@@ -38,7 +38,6 @@ func (c *Client) Send(request Request, response Response) (err error) {
 	httpResponse, err := c.httpClient.Do(httpRequest)
 	log.Printf("[DEBUG] http response=%v", httpResponse)
 	err = ParseFromHttpResponse(httpResponse, response)
-	log.Printf("[DEBUG] response=%s", response)
 	return
 }
 
