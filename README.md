@@ -14,7 +14,7 @@ import (
 func main() {
     client, _ := cvm.NewClientWithSecretId("YOUR_SECRET_ID", "YOUR_SECRET_KEY", "REGION_NAME")
     request := cvm.NewDescribeAddressesRequest()
-    request.Limit = "10"
+    request.Limit = common.IntPtr(10)
     // get response structure
     response, err := client.DescribeAddresses(request)
     // API errors
@@ -27,7 +27,7 @@ func main() {
         panic(err)
     }
     eips := response.Response.AddressSet
-    fmt.Println(eips)
+    fmt.Println(common.StringValues(eips))
 }
 ```
 
