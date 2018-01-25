@@ -34,7 +34,7 @@ type Address struct {
 
 type DescribeAddressesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId  *string    `json:"RequestId"`
 		TotalCount *int       `json:"TotalCount"`
 		AddressSet []*Address `json:"AddressSet`
@@ -48,7 +48,7 @@ type AllocateAddressesRequest struct {
 
 type AllocateAddressesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		AddressSet []*string `json:"AddressSet"`
 		RequestId  *string   `json:"RequestId"`
 	}
@@ -61,7 +61,7 @@ type ReleaseAddressesRequest struct {
 
 type ReleaseAddressesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId *string `json:"RequestId"`
 	}
 }
@@ -74,7 +74,7 @@ type ModifyAddressAttributeRequest struct {
 
 type ModifyAddressAttributeResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId *string `json:"RequestId"`
 	}
 }
@@ -89,7 +89,7 @@ type AssociateAddressRequest struct {
 
 type AssociateAddressResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId *string `json:"RequestId"`
 	}
 }
@@ -102,7 +102,7 @@ type DisassociateAddressRequest struct {
 
 type DisassociateAddressResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId *string `json:"RequestId"`
 	}
 }
@@ -169,7 +169,7 @@ type Instance struct {
 
 type DescribeInstancesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		TotalCount  *int        `json:"TotalCount"`
 		InstanceSet []*Instance `json:"InstanceSet"`
 		RequestId   *string     `json:"RequestId"`
@@ -215,7 +215,7 @@ type RunInstancesRequest struct {
 
 type RunInstancesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		InstanceIdSet []*string `json:"InstanceIdSet"`
 		RequestId     *string   `json:"RequestId"`
 	}

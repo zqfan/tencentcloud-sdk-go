@@ -38,7 +38,7 @@ func testEIPAddressCRUD(t *testing.T) {
 	}
 	descReq.Limit = common.IntPtr(10)
 	descReq.SetHttpMethod("POST")
-	descResp, err := c.DescribeAddresses(descReq)
+	_, err = c.DescribeAddresses(descReq)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("Fail: err=%v", err)
 		return
@@ -52,7 +52,7 @@ func testEIPAddressCRUD(t *testing.T) {
 		t.Errorf("Fail: err=%v", err)
 		return
 	}
-	descResp, err = c.DescribeAddresses(descReq)
+	descResp, err := c.DescribeAddresses(descReq)
 	if *descResp.Response.AddressSet[0].AddressName != "eip-test" {
 		t.Errorf("Fail to update eip name")
 		return
@@ -91,7 +91,7 @@ func TestInstanceCRUD(t *testing.T) {
 	// retrieve
 	descReq := NewDescribeInstancesRequest()
 	descReq.InstanceIds = []*string{createResp.Response.InstanceIdSet[0]}
-	descResp, err := c.DescribeInstances(descReq)
+	_, err = c.DescribeInstances(descReq)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("Fail: err=%v", err)
 		return

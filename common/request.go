@@ -2,7 +2,7 @@ package common
 
 import (
 	"io"
-	"log"
+	//"log"
 	"math/rand"
 	"net/url"
 	"reflect"
