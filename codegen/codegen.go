@@ -77,6 +77,28 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"TerminateInstances", "cvm"},
 			},
 		},
+		Service{
+			PkgName:    "cbs",
+			APIVersion: "",
+			Actions: []Action{
+				{"CreateSnapshot", "snapshot"},
+				{"DeleteSnapshot", "snapshot"},
+				{"ModifySnapshot", "snapshot"},
+				{"DescribeSnapshots", "snapshot"},
+				{"DescribeCbsStorages", "snapshot"},
+			},
+		},
+		Service{
+			PkgName:    "vpc",
+			APIVersion: "",
+			Actions: []Action{
+				{"CreateNatGateway", "vpc"},
+				{"DescribeNatGateway", "vpc"},
+				{"ModifyNatGateway", "vpc"},
+				{"DeleteNatGateway", "vpc"},
+				{"DescribeVpcEx", "vpc"},
+			},
+		},
 	}
 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	serviceDir := filepath.Join(dir, "..", "services")

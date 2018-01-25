@@ -64,7 +64,7 @@ func testEIPAddressCRUD(t *testing.T) {
 		_, err := c.ReleaseAddresses(delReq)
 		if apiErr, ok := err.(*common.APIError); ok {
 			if apiErr.Code == "InvalidAddressState" {
-				time.Sleep(time.Second)
+				time.Sleep(10 * time.Second)
 				continue
 			}
 		}

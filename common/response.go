@@ -24,6 +24,12 @@ type ErrorResponse struct {
 	} `json:"Response"`
 }
 
+type DeprecatedAPIErrorResponse struct {
+	Code     int    `json:"code"`
+	Message  string `json:"message"`
+	CodeDesc string `json:"codeDesc"`
+}
+
 func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
 	resp := &ErrorResponse{}
 	err = json.Unmarshal(body, resp)
@@ -32,6 +38,16 @@ func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
 	}
 	if resp.Response.Error.Code != "" {
 		return NewAPIError(resp.Response.Error.Code, resp.Response.Error.Message, -1)
+	}
+
+	deprecated := &DeprecatedAPIErrorResponse{}
+	err = json.Unmarshal(body, deprecated)
+	if err != nil {
+		return
+	}
+	log.Printf("[DEBUG] try deprecated error=%s", deprecated)
+	if deprecated.Code != 0 {
+		return NewAPIError(deprecated.CodeDesc, deprecated.Message, deprecated.Code)
 	}
 	return nil
 }

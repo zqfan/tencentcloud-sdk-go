@@ -228,7 +228,7 @@ type TerminateInstancesRequest struct {
 
 type TerminateInstancesResponse struct {
 	*common.BaseResponse
-	Response struct {
+	Response *struct {
 		RequestId *string `json:"RequestId"`
 	}
 }

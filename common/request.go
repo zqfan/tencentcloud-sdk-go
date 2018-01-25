@@ -148,7 +148,9 @@ func GetServiceDomain(service string) (domain string) {
 func CompleteCommonParams(request Request, c *Client) {
 	params := request.GetParams()
 	params["Region"] = c.GetRegion()
-	params["Version"] = request.GetVersion()
+	if request.GetVersion() != "" {
+		params["Version"] = request.GetVersion()
+	}
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
