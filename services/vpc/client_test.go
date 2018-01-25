@@ -5,7 +5,6 @@ import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	"os"
 	"testing"
-	"time"
 )
 
 func newClient() (*Client, error) {
@@ -29,39 +28,30 @@ func TestNatGatewayCRUD(t *testing.T) {
 	createReq.MaxConcurrent = common.IntPtr(1000)
 	createReq.AutoAllocEipNum = common.IntPtr(1)
 	createResp, err := c.CreateNatGateway(createReq)
+	b, _ = json.Marshal(createResp)
+	t.Logf("resp=%s", b)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("Fail err=%v", err)
 		return
 	}
-	b, _ = json.Marshal(createResp)
-	t.Logf("resp=%s", b)
 	// retrieve
 	descReq := NewDescribeNatGatewayRequest()
 	descReq.NatName = common.StringPtr("nat-test-xyz")
 	descResp, err := c.DescribeNatGateway(descReq)
+	b, _ = json.Marshal(descResp)
+	t.Logf("resp=%s", b)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("Fail err=%v, resp=%v", err, descResp)
 		return
 	}
-	b, _ = json.Marshal(descResp)
-	t.Logf("resp=%s", b)
 	deleteReq := NewDeleteNatGatewayRequest()
 	deleteReq.VpcId = descResp.Data[0].UnVpcId
 	deleteReq.NatId = descResp.Data[0].NatId
-	var deleteResp *DeleteNatGatewayResponse
-	for {
-		deleteResp, err = c.DeleteNatGateway(deleteReq)
-		b, _ = json.Marshal(deleteResp)
-		t.Logf("resp=%s", b)
-		if apiErr, ok := err.(*common.APIError); ok {
-			if apiErr.Code == "InvalidAddressState" {
-				time.Sleep(10 * time.Second)
-				continue
-			}
-		}
-		if err != nil {
-			t.Errorf("%s", err)
-		}
+	deleteResp, err := c.DeleteNatGateway(deleteReq)
+	b, _ = json.Marshal(deleteResp)
+	t.Logf("resp=%s", b)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("Fail err=%v, resp=%v", err, descResp)
 		return
 	}
 }
