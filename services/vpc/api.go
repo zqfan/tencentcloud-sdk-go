@@ -125,3 +125,27 @@ func (c *Client) DescribeVpcEx(request *DescribeVpcExRequest) (response *Describ
 	err = c.Send(request, response)
 	return
 }
+
+func NewDescribeVpcTaskResultRequest() (request *DescribeVpcTaskResultRequest) {
+	request = &DescribeVpcTaskResultRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "DescribeVpcTaskResult")
+	return
+}
+
+func NewDescribeVpcTaskResultResponse() (response *DescribeVpcTaskResultResponse) {
+	response = &DescribeVpcTaskResultResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DescribeVpcTaskResult(request *DescribeVpcTaskResultRequest) (response *DescribeVpcTaskResultResponse, err error) {
+	if request == nil {
+		request = NewDescribeVpcTaskResultRequest()
+	}
+	response = NewDescribeVpcTaskResultResponse()
+	err = c.Send(request, response)
+	return
+}

@@ -124,6 +124,25 @@ type DescribeVpcExResponse struct {
 	Data       []*Vpc  `json:"data"`
 }
 
+type DescribeVpcTaskResultRequest struct {
+	*common.BaseRequest
+	TaskId *int `name:"taskId"`
+}
+
+type DescribeVpcTaskResultResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Message  *string `json:"message"`
+	Data     *struct {
+		Status *int `json:"status"`
+		Output *struct {
+			ErrorCode *int    `json:"errorCode"`
+			ErrorMsg  *string `json:"errorMsg"`
+		} `json:"output"`
+	} `json:"data"`
+}
+
 type Request struct {
 }
 
