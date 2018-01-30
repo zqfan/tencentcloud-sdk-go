@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 )
 
@@ -106,7 +107,13 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 	for _, service := range services {
 		var buffer bytes.Buffer
 		tmpl.Execute(&buffer, service)
-		apiFilePath := filepath.Join(serviceDir, service.PkgName, "api.go")
+		var versionPath string
+		if service.APIVersion == "" {
+			versionPath = "unversioned"
+		} else {
+			versionPath = "v" + strings.Replace(service.APIVersion, "-", "", -1)
+		}
+		apiFilePath := filepath.Join(serviceDir, service.PkgName, versionPath, "api.go")
 		err := ioutil.WriteFile(apiFilePath, []byte(goFormat(buffer.String())), 0644)
 		if err != nil {
 			log.Println(err)
