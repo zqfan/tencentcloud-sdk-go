@@ -3,6 +3,8 @@ package common
 import (
 	"log"
 	"net/http"
+
+	"github.com/moul/http2curl"
 )
 
 type Client struct {
@@ -35,6 +37,10 @@ func (c *Client) Send(request Request, response Response) (err error) {
 		httpRequest.Header["Content-Type"] = []string{"application/x-www-form-urlencoded"}
 	}
 	log.Printf("[DEBUG] http request=%v", httpRequest)
+
+	command, _ := http2curl.GetCurlCommand(httpRequest)
+	log.Printf("[DEBUG] %v", command)
+
 	httpResponse, err := c.httpClient.Do(httpRequest)
 	log.Printf("[DEBUG] http response=%v", httpResponse)
 	err = ParseFromHttpResponse(httpResponse, response)
