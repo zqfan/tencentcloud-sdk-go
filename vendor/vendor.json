@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "CxNwJP++vjUAyy3bbJnNss1Il9Q=",
+			"path": "github.com/moul/http2curl",
+			"revision": "9ac6cf4d929b2fa8fd2d2e6dec5bb0feb4f4911d",
+			"revisionTime": "2017-09-19T18:10:01Z"
+		}
+	],
+	"rootPath": "github.com/zqfan/tencentcloud-sdk-go"
+}
