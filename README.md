@@ -7,7 +7,7 @@ package main
 
 import (
     "github.com/zqfan/tencentcloud-sdk-go/common"
-    "github.com/zqfan/tencentcloud-sdk-go/services/cvm"
+    cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
     "fmt"
 )
 

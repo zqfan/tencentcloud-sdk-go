@@ -45,7 +45,6 @@ func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
 	if err != nil {
 		return
 	}
-	log.Printf("[DEBUG] try deprecated error=%s", deprecated)
 	if deprecated.Code != 0 {
 		return NewAPIError(deprecated.CodeDesc, deprecated.Message, deprecated.Code)
 	}

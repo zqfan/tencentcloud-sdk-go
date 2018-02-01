@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 )
@@ -22,7 +21,6 @@ func Sign(request Request, credential Credential, method string) (err error) {
 	}
 	checkAuthParams(request, credential, method)
 	s := getStringToSign(request)
-	log.Printf("[DEBUG] sign str: %s", s)
 	signature := signString(s, credential.GetSecretKey(), method)
 	request.GetParams()["Signature"] = signature
 	return
