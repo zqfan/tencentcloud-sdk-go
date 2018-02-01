@@ -149,3 +149,51 @@ func (c *Client) DescribeVpcTaskResult(request *DescribeVpcTaskResultRequest) (r
 	err = c.Send(request, response)
 	return
 }
+
+func NewEipBindNatGatewayRequest() (request *EipBindNatGatewayRequest) {
+	request = &EipBindNatGatewayRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "EipBindNatGateway")
+	return
+}
+
+func NewEipBindNatGatewayResponse() (response *EipBindNatGatewayResponse) {
+	response = &EipBindNatGatewayResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) EipBindNatGateway(request *EipBindNatGatewayRequest) (response *EipBindNatGatewayResponse, err error) {
+	if request == nil {
+		request = NewEipBindNatGatewayRequest()
+	}
+	response = NewEipBindNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewEipUnBindNatGatewayRequest() (request *EipUnBindNatGatewayRequest) {
+	request = &EipUnBindNatGatewayRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "EipUnBindNatGateway")
+	return
+}
+
+func NewEipUnBindNatGatewayResponse() (response *EipUnBindNatGatewayResponse) {
+	response = &EipUnBindNatGatewayResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) EipUnBindNatGateway(request *EipUnBindNatGatewayRequest) (response *EipUnBindNatGatewayResponse, err error) {
+	if request == nil {
+		request = NewEipUnBindNatGatewayRequest()
+	}
+	response = NewEipUnBindNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}

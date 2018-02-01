@@ -99,6 +99,8 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"DeleteNatGateway", "vpc"},
 				{"DescribeVpcEx", "vpc"},
 				{"DescribeVpcTaskResult", "vpc"},
+				{"EipBindNatGateway", "vpc"},
+				{"EipUnBindNatGateway", "vpc"},
 			},
 		},
 	}

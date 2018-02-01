@@ -143,6 +143,37 @@ type DescribeVpcTaskResultResponse struct {
 	} `json:"data"`
 }
 
+type EipBindNatGatewayRequest struct {
+	*common.BaseRequest
+	NatId           *string   `name:"natId"`
+	VpcId           *string   `name:"vpcId"`
+	AssignedEipSet  []*string `name:"assignedEipSet"`
+	AutoAllocEipNum *int      `name:"autoAllocEipNum"`
+}
+
+type EipBindNatGatewayResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	TaskId   *int    `json:"taskId"`
+}
+
+type EipUnBindNatGatewayRequest struct {
+	*common.BaseRequest
+	NatId          *string   `name:"natId"`
+	VpcId          *string   `name:"vpcId"`
+	AssignedEipSet []*string `name:"assignedEipSet"`
+}
+
+type EipUnBindNatGatewayResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	TaskId   *int    `json:"taskId"`
+}
+
 type Request struct {
 }
 
