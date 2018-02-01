@@ -103,6 +103,15 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"EipUnBindNatGateway", "vpc"},
 			},
 		},
+		Service{
+			PkgName:    "ccs",
+			APIVersion: "",
+			Actions: []Action{
+				{"CreateCluster", "ccs"},
+				{"DescribeCluster", "ccs"},
+				{"DeleteCluster", "ccs"},
+			},
+		},
 	}
 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	serviceDir := filepath.Join(dir, "..", "services")
