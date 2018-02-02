@@ -14,12 +14,20 @@ func StringPtr(v string) *string {
 
 func StringValues(ptrs []*string) []string {
 	values := make([]string, len(ptrs))
-	for i, p := range ptrs {
-		if p != nil {
-			values[i] = *p
+	for i := 0; i < len(ptrs); i++ {
+		if ptrs[i] != nil {
+			values[i] = *ptrs[i]
 		}
 	}
 	return values
+}
+
+func StringPtrs(vals []string) []*string {
+	ptrs := make([]*string, len(vals))
+	for i := 0; i < len(vals); i++ {
+		ptrs[i] = &vals[i]
+	}
+	return ptrs
 }
 
 func BoolPtr(v bool) *bool {
