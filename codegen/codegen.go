@@ -113,6 +113,18 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"DeleteCluster", "ccs"},
 			},
 		},
+		Service{
+			PkgName:    "lb",
+			APIVersion: "",
+			Actions: []Action{
+				{"DescribeForwardLBBackends", "lb"},
+				{"DescribeForwardLBListeners", "lb"},
+				{"DescribeLoadBalancers", "lb"},
+				{"DescribeLoadBalancersTaskResult", "lb"},
+				{"DeregisterInstancesFromForwardLB", "lb"},
+				{"RegisterInstancesWithForwardLBSeventhListener", "lb"},
+			},
+		},
 	}
 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	serviceDir := filepath.Join(dir, "..", "services")

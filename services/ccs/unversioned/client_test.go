@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-var eip *string
-
 func newClient() (*Client, error) {
 	return NewClientWithSecretId(
 		os.Getenv("TENCENTCLOUD_SECRET_ID"),
