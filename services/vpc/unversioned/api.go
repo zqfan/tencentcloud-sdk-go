@@ -30,54 +30,6 @@ func (c *Client) CreateNatGateway(request *CreateNatGatewayRequest) (response *C
 	return
 }
 
-func NewDescribeNatGatewayRequest() (request *DescribeNatGatewayRequest) {
-	request = &DescribeNatGatewayRequest{
-		BaseRequest: &common.BaseRequest{},
-	}
-	request.Init().WithApiInfo("vpc", APIVersion, "DescribeNatGateway")
-	return
-}
-
-func NewDescribeNatGatewayResponse() (response *DescribeNatGatewayResponse) {
-	response = &DescribeNatGatewayResponse{
-		BaseResponse: &common.BaseResponse{},
-	}
-	return
-}
-
-func (c *Client) DescribeNatGateway(request *DescribeNatGatewayRequest) (response *DescribeNatGatewayResponse, err error) {
-	if request == nil {
-		request = NewDescribeNatGatewayRequest()
-	}
-	response = NewDescribeNatGatewayResponse()
-	err = c.Send(request, response)
-	return
-}
-
-func NewModifyNatGatewayRequest() (request *ModifyNatGatewayRequest) {
-	request = &ModifyNatGatewayRequest{
-		BaseRequest: &common.BaseRequest{},
-	}
-	request.Init().WithApiInfo("vpc", APIVersion, "ModifyNatGateway")
-	return
-}
-
-func NewModifyNatGatewayResponse() (response *ModifyNatGatewayResponse) {
-	response = &ModifyNatGatewayResponse{
-		BaseResponse: &common.BaseResponse{},
-	}
-	return
-}
-
-func (c *Client) ModifyNatGateway(request *ModifyNatGatewayRequest) (response *ModifyNatGatewayResponse, err error) {
-	if request == nil {
-		request = NewModifyNatGatewayRequest()
-	}
-	response = NewModifyNatGatewayResponse()
-	err = c.Send(request, response)
-	return
-}
-
 func NewDeleteNatGatewayRequest() (request *DeleteNatGatewayRequest) {
 	request = &DeleteNatGatewayRequest{
 		BaseRequest: &common.BaseRequest{},
@@ -98,6 +50,30 @@ func (c *Client) DeleteNatGateway(request *DeleteNatGatewayRequest) (response *D
 		request = NewDeleteNatGatewayRequest()
 	}
 	response = NewDeleteNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeNatGatewayRequest() (request *DescribeNatGatewayRequest) {
+	request = &DescribeNatGatewayRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "DescribeNatGateway")
+	return
+}
+
+func NewDescribeNatGatewayResponse() (response *DescribeNatGatewayResponse) {
+	response = &DescribeNatGatewayResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DescribeNatGateway(request *DescribeNatGatewayRequest) (response *DescribeNatGatewayResponse, err error) {
+	if request == nil {
+		request = NewDescribeNatGatewayRequest()
+	}
+	response = NewDescribeNatGatewayResponse()
 	err = c.Send(request, response)
 	return
 }
@@ -194,6 +170,54 @@ func (c *Client) EipUnBindNatGateway(request *EipUnBindNatGatewayRequest) (respo
 		request = NewEipUnBindNatGatewayRequest()
 	}
 	response = NewEipUnBindNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyNatGatewayRequest() (request *ModifyNatGatewayRequest) {
+	request = &ModifyNatGatewayRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "ModifyNatGateway")
+	return
+}
+
+func NewModifyNatGatewayResponse() (response *ModifyNatGatewayResponse) {
+	response = &ModifyNatGatewayResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) ModifyNatGateway(request *ModifyNatGatewayRequest) (response *ModifyNatGatewayResponse, err error) {
+	if request == nil {
+		request = NewModifyNatGatewayRequest()
+	}
+	response = NewModifyNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewQueryNatGatewayProductionStatusRequest() (request *QueryNatGatewayProductionStatusRequest) {
+	request = &QueryNatGatewayProductionStatusRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "QueryNatGatewayProductionStatus")
+	return
+}
+
+func NewQueryNatGatewayProductionStatusResponse() (response *QueryNatGatewayProductionStatusResponse) {
+	response = &QueryNatGatewayProductionStatusResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) QueryNatGatewayProductionStatus(request *QueryNatGatewayProductionStatusRequest) (response *QueryNatGatewayProductionStatusResponse, err error) {
+	if request == nil {
+		request = NewQueryNatGatewayProductionStatusRequest()
+	}
+	response = NewQueryNatGatewayProductionStatusResponse()
 	err = c.Send(request, response)
 	return
 }

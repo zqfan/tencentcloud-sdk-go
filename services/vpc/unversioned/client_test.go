@@ -2,6 +2,7 @@ package vpc
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 	"os"
@@ -42,21 +43,14 @@ func TestNatGatewayCRUD(t *testing.T) {
 	t.Logf("eip desc resp=%s", b)
 
 	// create
-	createReq := NewCreateNatGatewayRequest()
-	createReq.VpcId = vpcDescResp.Data[0].UnVpcId
-	createReq.NatName = common.StringPtr("nat-test-xyz")
-	createReq.MaxConcurrent = common.IntPtr(1000)
-	createReq.AssignedEipSet = []*string{eipDescResp.Response.AddressSet[0].AddressIp}
-	createResp, err := c.CreateNatGateway(createReq)
-	b, _ = json.Marshal(createResp)
-	t.Logf("resp=%s", b)
-	if _, ok := err.(*common.APIError); ok {
-		t.Errorf("Fail err=%v", err)
+	vpcid := vpcDescResp.Data[0].UnVpcId
+	eip := eipDescResp.Response.AddressSet[0].AddressIp
+	if createNatGateway(vpcid, eip, t) != nil {
 		return
 	}
 	// retrieve
 	descReq := NewDescribeNatGatewayRequest()
-	descReq.NatName = common.StringPtr("nat-test-xyz")
+	descReq.NatName = common.StringPtr("nat-jngbqyfs")
 	descResp, err := c.DescribeNatGateway(descReq)
 	b, _ = json.Marshal(descResp)
 	t.Logf("resp=%s", b)
@@ -69,30 +63,26 @@ func TestNatGatewayCRUD(t *testing.T) {
 }
 
 func deleteNatGateway(vpcId, natId *string, t *testing.T) {
-	vpcconn, _ := NewClientWithSecretId(
-		os.Getenv("TENCENTCLOUD_SECRET_ID"),
-		os.Getenv("TENCENTCLOUD_SECRET_KEY"),
-		"ap-guangzhou",
-	)
+	c, _ := newClient()
 	deleteReq := NewDeleteNatGatewayRequest()
 	deleteReq.VpcId = vpcId
 	deleteReq.NatId = natId
 	for {
-		deleteResp, err := vpcconn.DeleteNatGateway(deleteReq)
+		deleteResp, err := c.DeleteNatGateway(deleteReq)
 		b, _ := json.Marshal(deleteResp)
-		t.Logf("resp=%s", b)
+		t.Logf("delete nat resp=%s", b)
 		if _, ok := err.(*common.APIError); ok {
-			t.Errorf("Fail err=%v, resp=%v", err, deleteResp)
+			t.Errorf("[ERROR] err=%v, resp=%v", err, deleteResp)
 			return
 		}
 		taskReq := NewDescribeVpcTaskResultRequest()
 		taskReq.TaskId = deleteResp.TaskId
 		for {
-			taskResp, err := vpcconn.DescribeVpcTaskResult(taskReq)
+			taskResp, err := c.DescribeVpcTaskResult(taskReq)
 			b, _ = json.Marshal(taskResp)
-			t.Logf("resp=%s", b)
+			t.Logf("task desc resp=%s", b)
 			if _, ok := err.(*common.APIError); ok {
-				t.Errorf("Fail err=%v, resp=%v", err, taskResp)
+				t.Errorf("[ERROR] err=%v, resp=%v", err, taskResp)
 				return
 			}
 			if *taskResp.Data.Status == 0 {
@@ -102,6 +92,41 @@ func deleteNatGateway(vpcId, natId *string, t *testing.T) {
 				break
 			}
 			time.Sleep(10 * time.Second)
+		}
+		time.Sleep(10 * time.Second)
+	}
+}
+
+func createNatGateway(vpcid, eipid *string, t *testing.T) (err error) {
+	c, _ := newClient()
+	createReq := NewCreateNatGatewayRequest()
+	createReq.VpcId = vpcid
+	createReq.NatName = common.StringPtr("nat-jngbqyfs")
+	createReq.MaxConcurrent = common.IntPtr(1000)
+	createReq.AssignedEipSet = []*string{eipid}
+	createResp, err := c.CreateNatGateway(createReq)
+	b, _ := json.Marshal(createResp)
+	t.Logf("create nat resp=%s", b)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+
+	queryReq := NewQueryNatGatewayProductionStatusRequest()
+	queryReq.BillId = createResp.BillId
+
+	for {
+		queryResp, err := c.QueryNatGatewayProductionStatus(queryReq)
+		b, _ = json.Marshal(queryResp)
+		t.Logf("query bill resp=%s", b)
+		if _, ok := err.(*common.APIError); ok {
+			t.Errorf("[ERROR] err=%v", err)
+			return err
+		}
+		if *queryResp.Data.Status == BillStatusSuccess {
+			return nil
+		} else if *queryResp.Data.Status == BillStatusFail {
+			return errors.New("Create NAT Gateway Fail")
 		}
 		time.Sleep(10 * time.Second)
 	}
@@ -129,14 +154,11 @@ func TestNatGatewayBindUnbindEIP(t *testing.T) {
 	b, _ := json.Marshal(eipDescResp)
 	t.Logf("eip desc resp=%s", b)
 
-	createReq := NewCreateNatGatewayRequest()
-	createReq.VpcId = vpcDescResp.Data[0].UnVpcId
-	createReq.NatName = common.StringPtr("nat-jngbqyfs")
-	createReq.MaxConcurrent = common.IntPtr(1000)
-	createReq.AssignedEipSet = []*string{eipDescResp.Response.AddressSet[0].AddressIp}
-	createResp, _ := c.CreateNatGateway(createReq)
-	b, _ = json.Marshal(createResp)
-	t.Logf("nat create resp=%s", b)
+	vpcid := vpcDescResp.Data[0].UnVpcId
+	eip := eipDescResp.Response.AddressSet[0].AddressIp
+	if createNatGateway(vpcid, eip, t) != nil {
+		return
+	}
 
 	descReq := NewDescribeNatGatewayRequest()
 	descReq.NatName = common.StringPtr("nat-jngbqyfs")
@@ -155,8 +177,6 @@ func TestNatGatewayBindUnbindEIP(t *testing.T) {
 	b, _ = json.Marshal(eipDescResp)
 	t.Logf("eip desc resp=%s", b)
 
-	// here we must wait otherwise bind will fail because nat gateway not found
-	time.Sleep(10 * time.Second)
 	bindReq := NewEipBindNatGatewayRequest()
 	bindReq.NatId = descResp.Data[0].NatId
 	bindReq.VpcId = descResp.Data[0].UnVpcId
@@ -217,5 +237,6 @@ func TestNatGatewayBindUnbindEIP(t *testing.T) {
 	descResp, _ = c.DescribeNatGateway(descReq)
 	b, _ = json.Marshal(descResp)
 	t.Logf("nat desc resp=%s", b)
+
 	deleteNatGateway(descResp.Data[0].UnVpcId, descResp.Data[0].NatId, t)
 }

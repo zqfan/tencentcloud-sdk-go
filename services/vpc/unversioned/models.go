@@ -174,6 +174,28 @@ type EipUnBindNatGatewayResponse struct {
 	TaskId   *int    `json:"taskId"`
 }
 
+type QueryNatGatewayProductionStatusRequest struct {
+	*common.BaseRequest
+	BillId *string `name:"billId"`
+}
+
+const (
+	BillStatusSuccess = 0
+	BillStatusFail    = 1
+	BillStatusDoing   = 2
+)
+
+type QueryNatGatewayProductionStatusResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     *struct {
+		Status    *int    `json:"status"`
+		ErrorCode *string `json:"errorcode"`
+	} `json:"data"`
+}
+
 type Request struct {
 }
 

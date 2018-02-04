@@ -94,13 +94,14 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 			APIVersion: "",
 			Actions: []Action{
 				{"CreateNatGateway", "vpc"},
-				{"DescribeNatGateway", "vpc"},
-				{"ModifyNatGateway", "vpc"},
 				{"DeleteNatGateway", "vpc"},
+				{"DescribeNatGateway", "vpc"},
 				{"DescribeVpcEx", "vpc"},
 				{"DescribeVpcTaskResult", "vpc"},
 				{"EipBindNatGateway", "vpc"},
 				{"EipUnBindNatGateway", "vpc"},
+				{"ModifyNatGateway", "vpc"},
+				{"QueryNatGatewayProductionStatus", "vpc"},
 			},
 		},
 		Service{
