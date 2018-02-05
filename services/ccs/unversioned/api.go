@@ -6,6 +6,54 @@ import (
 
 const APIVersion = ""
 
+func NewAddClusterInstancesRequest() (request *AddClusterInstancesRequest) {
+	request = &AddClusterInstancesRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "AddClusterInstances")
+	return
+}
+
+func NewAddClusterInstancesResponse() (response *AddClusterInstancesResponse) {
+	response = &AddClusterInstancesResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) AddClusterInstances(request *AddClusterInstancesRequest) (response *AddClusterInstancesResponse, err error) {
+	if request == nil {
+		request = NewAddClusterInstancesRequest()
+	}
+	response = NewAddClusterInstancesResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewAddClusterInstancesFromExistedCvmRequest() (request *AddClusterInstancesFromExistedCvmRequest) {
+	request = &AddClusterInstancesFromExistedCvmRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "AddClusterInstancesFromExistedCvm")
+	return
+}
+
+func NewAddClusterInstancesFromExistedCvmResponse() (response *AddClusterInstancesFromExistedCvmResponse) {
+	response = &AddClusterInstancesFromExistedCvmResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) AddClusterInstancesFromExistedCvm(request *AddClusterInstancesFromExistedCvmRequest) (response *AddClusterInstancesFromExistedCvmResponse, err error) {
+	if request == nil {
+		request = NewAddClusterInstancesFromExistedCvmRequest()
+	}
+	response = NewAddClusterInstancesFromExistedCvmResponse()
+	err = c.Send(request, response)
+	return
+}
+
 func NewCreateClusterRequest() (request *CreateClusterRequest) {
 	request = &CreateClusterRequest{
 		BaseRequest: &common.BaseRequest{},
@@ -26,6 +74,54 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
 		request = NewCreateClusterRequest()
 	}
 	response = NewCreateClusterResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
+	request = &DeleteClusterRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "DeleteCluster")
+	return
+}
+
+func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
+	response = &DeleteClusterResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteClusterResponse, err error) {
+	if request == nil {
+		request = NewDeleteClusterRequest()
+	}
+	response = NewDeleteClusterResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteClusterInstancesRequest() (request *DeleteClusterInstancesRequest) {
+	request = &DeleteClusterInstancesRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "DeleteClusterInstances")
+	return
+}
+
+func NewDeleteClusterInstancesResponse() (response *DeleteClusterInstancesResponse) {
+	response = &DeleteClusterInstancesResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DeleteClusterInstances(request *DeleteClusterInstancesRequest) (response *DeleteClusterInstancesResponse, err error) {
+	if request == nil {
+		request = NewDeleteClusterInstancesRequest()
+	}
+	response = NewDeleteClusterInstancesResponse()
 	err = c.Send(request, response)
 	return
 }
@@ -54,26 +150,50 @@ func (c *Client) DescribeCluster(request *DescribeClusterRequest) (response *Des
 	return
 }
 
-func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
-	request = &DeleteClusterRequest{
+func NewDescribeClusterInstancesRequest() (request *DescribeClusterInstancesRequest) {
+	request = &DescribeClusterInstancesRequest{
 		BaseRequest: &common.BaseRequest{},
 	}
-	request.Init().WithApiInfo("ccs", APIVersion, "DeleteCluster")
+	request.Init().WithApiInfo("ccs", APIVersion, "DescribeClusterInstances")
 	return
 }
 
-func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
-	response = &DeleteClusterResponse{
+func NewDescribeClusterInstancesResponse() (response *DescribeClusterInstancesResponse) {
+	response = &DescribeClusterInstancesResponse{
 		BaseResponse: &common.BaseResponse{},
 	}
 	return
 }
 
-func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteClusterResponse, err error) {
+func (c *Client) DescribeClusterInstances(request *DescribeClusterInstancesRequest) (response *DescribeClusterInstancesResponse, err error) {
 	if request == nil {
-		request = NewDeleteClusterRequest()
+		request = NewDescribeClusterInstancesRequest()
 	}
-	response = NewDeleteClusterResponse()
+	response = NewDescribeClusterInstancesResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeClusterTaskResultRequest() (request *DescribeClusterTaskResultRequest) {
+	request = &DescribeClusterTaskResultRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "DescribeClusterTaskResult")
+	return
+}
+
+func NewDescribeClusterTaskResultResponse() (response *DescribeClusterTaskResultResponse) {
+	response = &DescribeClusterTaskResultResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DescribeClusterTaskResult(request *DescribeClusterTaskResultRequest) (response *DescribeClusterTaskResultResponse, err error) {
+	if request == nil {
+		request = NewDescribeClusterTaskResultRequest()
+	}
+	response = NewDescribeClusterTaskResultResponse()
 	err = c.Send(request, response)
 	return
 }

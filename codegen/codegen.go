@@ -108,9 +108,14 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 			PkgName:    "ccs",
 			APIVersion: "",
 			Actions: []Action{
+				{"AddClusterInstances", "ccs"},
+				{"AddClusterInstancesFromExistedCvm", "ccs"},
 				{"CreateCluster", "ccs"},
-				{"DescribeCluster", "ccs"},
 				{"DeleteCluster", "ccs"},
+				{"DeleteClusterInstances", "ccs"},
+				{"DescribeCluster", "ccs"},
+				{"DescribeClusterInstances", "ccs"},
+				{"DescribeClusterTaskResult", "ccs"},
 			},
 		},
 		Service{
