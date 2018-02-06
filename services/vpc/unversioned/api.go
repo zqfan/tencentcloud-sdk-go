@@ -6,6 +6,30 @@ import (
 
 const APIVersion = ""
 
+func NewAddDnaptRuleRequest() (request *AddDnaptRuleRequest) {
+	request = &AddDnaptRuleRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "AddDnaptRule")
+	return
+}
+
+func NewAddDnaptRuleResponse() (response *AddDnaptRuleResponse) {
+	response = &AddDnaptRuleResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) AddDnaptRule(request *AddDnaptRuleRequest) (response *AddDnaptRuleResponse, err error) {
+	if request == nil {
+		request = NewAddDnaptRuleRequest()
+	}
+	response = NewAddDnaptRuleResponse()
+	err = c.Send(request, response)
+	return
+}
+
 func NewCreateNatGatewayRequest() (request *CreateNatGatewayRequest) {
 	request = &CreateNatGatewayRequest{
 		BaseRequest: &common.BaseRequest{},
@@ -26,6 +50,30 @@ func (c *Client) CreateNatGateway(request *CreateNatGatewayRequest) (response *C
 		request = NewCreateNatGatewayRequest()
 	}
 	response = NewCreateNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteDnaptRuleRequest() (request *DeleteDnaptRuleRequest) {
+	request = &DeleteDnaptRuleRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "DeleteDnaptRule")
+	return
+}
+
+func NewDeleteDnaptRuleResponse() (response *DeleteDnaptRuleResponse) {
+	response = &DeleteDnaptRuleResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DeleteDnaptRule(request *DeleteDnaptRuleRequest) (response *DeleteDnaptRuleResponse, err error) {
+	if request == nil {
+		request = NewDeleteDnaptRuleRequest()
+	}
+	response = NewDeleteDnaptRuleResponse()
 	err = c.Send(request, response)
 	return
 }
@@ -170,6 +218,54 @@ func (c *Client) EipUnBindNatGateway(request *EipUnBindNatGatewayRequest) (respo
 		request = NewEipUnBindNatGatewayRequest()
 	}
 	response = NewEipUnBindNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewGetDnaptRuleRequest() (request *GetDnaptRuleRequest) {
+	request = &GetDnaptRuleRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "GetDnaptRule")
+	return
+}
+
+func NewGetDnaptRuleResponse() (response *GetDnaptRuleResponse) {
+	response = &GetDnaptRuleResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) GetDnaptRule(request *GetDnaptRuleRequest) (response *GetDnaptRuleResponse, err error) {
+	if request == nil {
+		request = NewGetDnaptRuleRequest()
+	}
+	response = NewGetDnaptRuleResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyDnaptRuleRequest() (request *ModifyDnaptRuleRequest) {
+	request = &ModifyDnaptRuleRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "ModifyDnaptRule")
+	return
+}
+
+func NewModifyDnaptRuleResponse() (response *ModifyDnaptRuleResponse) {
+	response = &ModifyDnaptRuleResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) ModifyDnaptRule(request *ModifyDnaptRuleRequest) (response *ModifyDnaptRuleResponse, err error) {
+	if request == nil {
+		request = NewModifyDnaptRuleRequest()
+	}
+	response = NewModifyDnaptRuleResponse()
 	err = c.Send(request, response)
 	return
 }
