@@ -197,8 +197,104 @@ type QueryNatGatewayProductionStatusResponse struct {
 	} `json:"data"`
 }
 
+type GetDnaptRuleRequest struct {
+	*common.BaseRequest
+	VpcId *string `name:"vpcId"`
+	NatId *string `name:"natId"`
+}
+
+type DnaptRule struct {
+	CreateTime  *string `json:"createTime"`
+	Description *string `json:"description"`
+	Eip         *string `json:"eip" name:"eip"`
+	Eport       *int    `json:"eport" name:"eport"`
+	NatId       *int    `json:"natId"`
+	Owner       *string `json:"owner"`
+	Pip         *string `json:"pip"`
+	PipType     *int    `json:"pipType"`
+	Pport       *int    `json:"pport"`
+	Proto       *string `json:"proto" name:"proto"`
+	UniqNatId   *string `json:"uniqNatId"`
+	UniqVpcId   *string `json:"uniqVpcId"`
+	VpcId       *int    `json:"vpcId"`
+}
+
+type GetDnaptRuleResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     *struct {
+		TotalNum *int         `json:"totalNum"`
+		Detail   []*DnaptRule `json:"detail"`
+	} `json:"data"`
+	Message *string `json:"message"`
+}
+
+type AddDnaptRuleRequest struct {
+	*common.BaseRequest
+	VpcId       *string `name:"vpcId"`
+	NatId       *string `name:"natId"`
+	Proto       *string `name:"proto"`
+	Eip         *string `name:"eip"`
+	Eport       *int    `name:"eport"`
+	Pip         *string `name:"pip"`
+	Pport       *int    `name:"pport"`
+	Description *string `name:"description"`
+}
+
+type AddDnaptRuleResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     []*struct {
+	} `json:"data"`
+}
+
+type DeleteDnaptRuleRequest struct {
+	*common.BaseRequest
+	VpcId    *string      `name:"vpcId"`
+	NatId    *string      `name:"natId"`
+	DnatList []*DnaptRule `name:"dnatList" list`
+}
+
+type DeleteDnaptRuleResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     []*struct {
+	} `json:"data"`
+}
+
+type ModifyDnaptRuleRequest struct {
+	*common.BaseRequest
+	VpcId       *string `name:"vpcId"`
+	NatId       *string `name:"natId"`
+	OldProto    *string `name:"oldProto"`
+	OldEip      *string `name:"oldEip"`
+	OldEport    *int    `name:"oldEport"`
+	Proto       *string `name:"proto"`
+	Eip         *string `name:"eip"`
+	Eport       *int    `name:"eport"`
+	Pip         *string `name:"pip"`
+	Pport       *int    `name:"pport"`
+	Description *string `name:"description"`
+}
+
+type ModifyDnaptRuleResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     []*struct {
+	} `json:"data"`
+}
+
 type Request struct {
+	*common.BaseRequest
 }
 
 type Response struct {
+	*common.BaseResponse
 }

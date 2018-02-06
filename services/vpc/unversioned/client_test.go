@@ -240,3 +240,77 @@ func TestNatGatewayBindUnbindEIP(t *testing.T) {
 
 	deleteNatGateway(descResp.Data[0].UnVpcId, descResp.Data[0].NatId, t)
 }
+
+func TestDnatRuleCRUD(t *testing.T) {
+	c, _ := newClient()
+	natDescReq := NewDescribeNatGatewayRequest()
+	natDescResp, _ := c.DescribeNatGateway(natDescReq)
+	if len(natDescResp.Data) == 0 {
+		t.Errorf("[ERROR] No nat gateway found")
+		return
+	}
+
+	addReq := NewAddDnaptRuleRequest()
+	addReq.NatId = natDescResp.Data[0].NatId
+	addReq.VpcId = natDescResp.Data[0].UnVpcId
+	addReq.Proto = common.StringPtr("tcp")
+	addReq.Eip = natDescResp.Data[0].EipSet[0]
+	addReq.Eport = common.IntPtr(80)
+	addReq.Pip = common.StringPtr("172.16.16.6")
+	addReq.Pport = common.IntPtr(80)
+	addResp, err := c.AddDnaptRule(addReq)
+	addJson, _ := json.Marshal(addResp)
+	t.Logf("dnat rule add resp=%s", addJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+
+	descReq := NewGetDnaptRuleRequest()
+	descReq.NatId = natDescResp.Data[0].NatId
+	descReq.VpcId = natDescResp.Data[0].UnVpcId
+	descResp, err := c.GetDnaptRule(descReq)
+	descJson, _ := json.Marshal(descResp)
+	t.Logf("dnat rule desc resp=%s", descJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+
+	updateReq := NewModifyDnaptRuleRequest()
+	updateReq.NatId = natDescResp.Data[0].NatId
+	updateReq.VpcId = natDescResp.Data[0].UnVpcId
+	updateReq.OldProto = descResp.Data.Detail[0].Proto
+	updateReq.OldEip = descResp.Data.Detail[0].Eip
+	updateReq.OldEport = descResp.Data.Detail[0].Eport
+	updateReq.Proto = common.StringPtr("udp")
+	updateReq.Eip = descResp.Data.Detail[0].Eip
+	updateReq.Eport = descResp.Data.Detail[0].Eport
+	updateReq.Pip = descResp.Data.Detail[0].Pip
+	updateReq.Pport = descResp.Data.Detail[0].Pport
+	updateResp, err := c.ModifyDnaptRule(updateReq)
+	updateJson, _ := json.Marshal(updateResp)
+	t.Logf("dnat rule desc resp=%s", updateJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+
+	delReq := NewDeleteDnaptRuleRequest()
+	delReq.NatId = natDescResp.Data[0].NatId
+	delReq.VpcId = natDescResp.Data[0].UnVpcId
+	delReq.DnatList = []*DnaptRule{
+		&DnaptRule{
+			Eip:   descResp.Data.Detail[0].Eip,
+			Eport: descResp.Data.Detail[0].Eport,
+			Proto: descResp.Data.Detail[0].Proto,
+		},
+	}
+	delResp, err := c.DeleteDnaptRule(delReq)
+	delJson, _ := json.Marshal(delResp)
+	t.Logf("dnat rule desc resp=%s", delJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+}
