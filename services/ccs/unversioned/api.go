@@ -174,6 +174,30 @@ func (c *Client) DescribeClusterInstances(request *DescribeClusterInstancesReque
 	return
 }
 
+func NewDescribeClusterSecurityInfoRequest() (request *DescribeClusterSecurityInfoRequest) {
+	request = &DescribeClusterSecurityInfoRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "DescribeClusterSecurityInfo")
+	return
+}
+
+func NewDescribeClusterSecurityInfoResponse() (response *DescribeClusterSecurityInfoResponse) {
+	response = &DescribeClusterSecurityInfoResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DescribeClusterSecurityInfo(request *DescribeClusterSecurityInfoRequest) (response *DescribeClusterSecurityInfoResponse, err error) {
+	if request == nil {
+		request = NewDescribeClusterSecurityInfoRequest()
+	}
+	response = NewDescribeClusterSecurityInfoResponse()
+	err = c.Send(request, response)
+	return
+}
+
 func NewDescribeClusterTaskResultRequest() (request *DescribeClusterTaskResultRequest) {
 	request = &DescribeClusterTaskResultRequest{
 		BaseRequest: &common.BaseRequest{},
@@ -194,6 +218,30 @@ func (c *Client) DescribeClusterTaskResult(request *DescribeClusterTaskResultReq
 		request = NewDescribeClusterTaskResultRequest()
 	}
 	response = NewDescribeClusterTaskResultResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewOperateClusterVipRequest() (request *OperateClusterVipRequest) {
+	request = &OperateClusterVipRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("ccs", APIVersion, "OperateClusterVip")
+	return
+}
+
+func NewOperateClusterVipResponse() (response *OperateClusterVipResponse) {
+	response = &OperateClusterVipResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) OperateClusterVip(request *OperateClusterVipRequest) (response *OperateClusterVipResponse, err error) {
+	if request == nil {
+		request = NewOperateClusterVipRequest()
+	}
+	response = NewOperateClusterVipResponse()
 	err = c.Send(request, response)
 	return
 }

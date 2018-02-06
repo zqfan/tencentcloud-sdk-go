@@ -2,6 +2,7 @@ package ccs
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	"os"
 	"testing"
@@ -76,7 +77,7 @@ func XTestClusterCRUD(t *testing.T) {
 	}
 }
 
-func TestClusterInstanceCRUD(t *testing.T) {
+func XTestClusterInstanceCRUD(t *testing.T) {
 	c, _ := newClient()
 	clusterDescReq := NewDescribeClusterRequest()
 	clusterDescResp, err := c.DescribeCluster(clusterDescReq)
@@ -105,23 +106,8 @@ func TestClusterInstanceCRUD(t *testing.T) {
 	addJson, _ := json.Marshal(addResp)
 	t.Logf("add instance resp=%s", addJson)
 
-	taskReq := NewDescribeClusterTaskResultRequest()
-	taskReq.RequestId = addResp.Data.RequestId
-	for i := 0; i < 100; i++ {
-		taskResp, err := c.DescribeClusterTaskResult(taskReq)
-		if _, ok := err.(*common.APIError); ok {
-			t.Errorf("[ERROR] err=%v", err)
-			return
-		}
-		taskJson, _ := json.Marshal(taskResp)
-		t.Logf("task resp=%s", taskJson)
-		if *taskResp.Data.Status == "succ" {
-			break
-		} else if *taskResp.Data.Status == "fail" {
-			t.Errorf("[ERROR] task fail")
-			return
-		}
-		time.Sleep(10 * time.Second)
+	if waitCCSTaskFinish(addResp.Data.RequestId, t) != nil {
+		return
 	}
 
 	//addCvmReq := NewAddClusterInstancesFromExistedCvmRequest()
@@ -158,13 +144,81 @@ func TestClusterInstanceCRUD(t *testing.T) {
 	delJson, _ := json.Marshal(delResp)
 	t.Logf("cluster del instance resp=%s", delJson)
 
-	taskReq = NewDescribeClusterTaskResultRequest()
-	taskReq.RequestId = delResp.Data.RequestId
-	for i := 0; i < 10; i++ {
+	if waitCCSTaskFinish(delResp.Data.RequestId, t) != nil {
+		return
+	}
+}
+
+func TestDescClusterSec(t *testing.T) {
+	c, _ := newClient()
+	clusterDescReq := NewDescribeClusterRequest()
+	clusterDescResp, err := c.DescribeCluster(clusterDescReq)
+	if *clusterDescResp.Data.TotalCount == 0 {
+		t.Errorf("[ERROR] No cluster found")
+		return
+	}
+
+	descReq := NewDescribeClusterSecurityInfoRequest()
+	descReq.ClusterId = clusterDescResp.Data.Clusters[0].ClusterId
+	descResp, err := c.DescribeClusterSecurityInfo(descReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	descJson, _ := json.Marshal(descResp)
+	t.Logf("cluster sec info desc resp=%s", descJson)
+}
+
+func TestClusterVipAddDel(t *testing.T) {
+	c, _ := newClient()
+	clusterDescReq := NewDescribeClusterRequest()
+	clusterDescResp, err := c.DescribeCluster(clusterDescReq)
+	if *clusterDescResp.Data.TotalCount == 0 {
+		t.Errorf("[ERROR] No cluster found")
+		return
+	}
+
+	addReq := NewOperateClusterVipRequest()
+	addReq.ClusterId = clusterDescResp.Data.Clusters[0].ClusterId
+	addReq.Operation = common.StringPtr(ClusterVipCreate)
+	addResp, err := c.OperateClusterVip(addReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	addJson, _ := json.Marshal(addResp)
+	t.Logf("cluster vip add resp=%s", addJson)
+
+	if waitCCSTaskFinish(addResp.Data.RequestId, t) != nil {
+		return
+	}
+
+	delReq := NewOperateClusterVipRequest()
+	delReq.ClusterId = clusterDescResp.Data.Clusters[0].ClusterId
+	delReq.Operation = common.StringPtr(ClusterVipDelete)
+	delResp, err := c.OperateClusterVip(delReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	delJson, _ := json.Marshal(delResp)
+	t.Logf("cluster vip add resp=%s", delJson)
+
+	if waitCCSTaskFinish(delResp.Data.RequestId, t) != nil {
+		return
+	}
+}
+
+func waitCCSTaskFinish(taskId *int, t *testing.T) error {
+	c, _ := newClient()
+
+	taskReq := NewDescribeClusterTaskResultRequest()
+	taskReq.RequestId = taskId
+	for i := 0; i < 100; i++ {
 		taskResp, err := c.DescribeClusterTaskResult(taskReq)
 		if _, ok := err.(*common.APIError); ok {
 			t.Errorf("[ERROR] err=%v", err)
-			return
+			return err
 		}
 		taskJson, _ := json.Marshal(taskResp)
 		t.Logf("task resp=%s", taskJson)
@@ -172,8 +226,9 @@ func TestClusterInstanceCRUD(t *testing.T) {
 			break
 		} else if *taskResp.Data.Status == "fail" {
 			t.Errorf("[ERROR] task fail")
-			return
+			return errors.New("[ERROR] task fail")
 		}
 		time.Sleep(10 * time.Second)
 	}
+	return nil
 }

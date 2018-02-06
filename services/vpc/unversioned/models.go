@@ -16,10 +16,11 @@ type CreateNatGatewayRequest struct {
 
 type CreateNatGatewayResponse struct {
 	*common.BaseResponse
-	Code     *int    `json:"code"`
-	CodeDesc *string `json:"codeDesc"`
-	Message  *string `json:"message"`
-	BillId   *string `json:"billId"`
+	Code         *int    `json:"code"`
+	CodeDesc     *string `json:"codeDesc"`
+	Message      *string `json:"message"`
+	BillId       *string `json:"billId"`
+	NatGatewayId *string `json:"natGatewayId"`
 }
 
 type DescribeNatGatewayRequest struct {

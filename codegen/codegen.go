@@ -115,7 +115,9 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"DeleteClusterInstances", "ccs"},
 				{"DescribeCluster", "ccs"},
 				{"DescribeClusterInstances", "ccs"},
+				{"DescribeClusterSecurityInfo", "ccs"},
 				{"DescribeClusterTaskResult", "ccs"},
+				{"OperateClusterVip", "ccs"},
 			},
 		},
 		Service{

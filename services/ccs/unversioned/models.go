@@ -4,6 +4,11 @@ import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 )
 
+const (
+	ClusterVipCreate = "Create"
+	ClusterVipDelete = "Delete"
+)
+
 type DescribeClusterRequest struct {
 	*common.BaseRequest
 	ClusterIds  []*string `name:"clusterIds" list`
@@ -235,6 +240,40 @@ type DescribeClusterTaskResultResponse struct {
 		Status *string `json:"status"`
 	} `json:"data"`
 	Message *string `json:"message"`
+}
+
+type DescribeClusterSecurityInfoRequest struct {
+	*common.BaseRequest
+	ClusterId *string `name:"clusterId"`
+}
+
+type DescribeClusterSecurityInfoResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Data     *struct {
+		CertificationAuthority  *string `json:"certificationAuthority"`
+		ClusterExternalEndpoint *string `json:"clusterExternalEndpoint"`
+		Password                *string `json:"password"`
+		UserName                *string `json:"userName"`
+	} `json:"data"`
+	Message *string `json:"message"`
+}
+
+type OperateClusterVipRequest struct {
+	*common.BaseRequest
+	ClusterId *string `name:"clusterId"`
+	Operation *string `name:"operation"`
+}
+
+type OperateClusterVipResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Message  *string `json:"message"`
+	Data     *struct {
+		RequestId *int `json:"requestId"`
+	} `json:"data"`
 }
 
 type Request struct {
