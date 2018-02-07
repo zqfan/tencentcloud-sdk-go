@@ -2,7 +2,7 @@ package vpc
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 	"os"
@@ -53,11 +53,25 @@ func TestNatGatewayCRUD(t *testing.T) {
 	descReq.NatName = common.StringPtr("nat-jngbqyfs")
 	descResp, err := c.DescribeNatGateway(descReq)
 	b, _ = json.Marshal(descResp)
-	t.Logf("resp=%s", b)
+	t.Logf("nat desc resp=%s", b)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("Fail err=%v, resp=%v", err, descResp)
 		return
 	}
+	// upgrade max concurrent
+	upReq := NewUpgradeNatGatewayRequest()
+	upReq.VpcId = vpcid
+	upReq.NatId = descResp.Data[0].NatId
+	upReq.MaxConcurrent = common.IntPtr(3000000)
+	upResp, err := c.UpgradeNatGateway(upReq)
+	upJson, _ := json.Marshal(upResp)
+	t.Logf("nat upgrade resp=%s", upJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("Fail err=%v, resp=%v", err, upResp)
+		deleteNatGateway(descResp.Data[0].UnVpcId, descResp.Data[0].NatId, t)
+		return
+	}
+	waitVpcNatBillResult(upResp.BillId, t)
 	// delete
 	deleteNatGateway(descResp.Data[0].UnVpcId, descResp.Data[0].NatId, t)
 }
@@ -102,7 +116,7 @@ func createNatGateway(vpcid, eipid *string, t *testing.T) (err error) {
 	createReq := NewCreateNatGatewayRequest()
 	createReq.VpcId = vpcid
 	createReq.NatName = common.StringPtr("nat-jngbqyfs")
-	createReq.MaxConcurrent = common.IntPtr(1000)
+	createReq.MaxConcurrent = common.IntPtr(1000000)
 	createReq.AssignedEipSet = []*string{eipid}
 	createResp, err := c.CreateNatGateway(createReq)
 	b, _ := json.Marshal(createResp)
@@ -112,13 +126,18 @@ func createNatGateway(vpcid, eipid *string, t *testing.T) (err error) {
 		return
 	}
 
+	return waitVpcNatBillResult(createResp.BillId, t)
+}
+
+func waitVpcNatBillResult(billId *string, t *testing.T) error {
+	c, _ := newClient()
 	queryReq := NewQueryNatGatewayProductionStatusRequest()
-	queryReq.BillId = createResp.BillId
+	queryReq.BillId = billId
 
 	for {
 		queryResp, err := c.QueryNatGatewayProductionStatus(queryReq)
-		b, _ = json.Marshal(queryResp)
-		t.Logf("query bill resp=%s", b)
+		queryJson, _ := json.Marshal(queryResp)
+		t.Logf("query bill resp=%s", queryJson)
 		if _, ok := err.(*common.APIError); ok {
 			t.Errorf("[ERROR] err=%v", err)
 			return err
@@ -126,10 +145,12 @@ func createNatGateway(vpcid, eipid *string, t *testing.T) (err error) {
 		if *queryResp.Data.Status == BillStatusSuccess {
 			return nil
 		} else if *queryResp.Data.Status == BillStatusFail {
-			return errors.New("Create NAT Gateway Fail")
+			return fmt.Errorf("[ERROR] Bill=%s Fail", *billId)
 		}
 		time.Sleep(10 * time.Second)
 	}
+
+	return nil
 }
 
 func TestNatGatewayBindUnbindEIP(t *testing.T) {

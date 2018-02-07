@@ -106,6 +106,7 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"ModifyDnaptRule", "vpc"},
 				{"ModifyNatGateway", "vpc"},
 				{"QueryNatGatewayProductionStatus", "vpc"},
+				{"UpgradeNatGateway", "vpc"},
 			},
 		},
 		Service{

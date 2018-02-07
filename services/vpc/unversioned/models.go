@@ -291,6 +291,21 @@ type ModifyDnaptRuleResponse struct {
 	} `json:"data"`
 }
 
+type UpgradeNatGatewayRequest struct {
+	*common.BaseRequest
+	VpcId         *string `name:"vpcId"`
+	NatId         *string `name:"natId"`
+	MaxConcurrent *int    `name:"maxConcurrent"`
+}
+
+type UpgradeNatGatewayResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Message  *string `json:"message"`
+	BillId   *string `json:"billId"`
+}
+
 type Request struct {
 	*common.BaseRequest
 }

@@ -317,3 +317,27 @@ func (c *Client) QueryNatGatewayProductionStatus(request *QueryNatGatewayProduct
 	err = c.Send(request, response)
 	return
 }
+
+func NewUpgradeNatGatewayRequest() (request *UpgradeNatGatewayRequest) {
+	request = &UpgradeNatGatewayRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "UpgradeNatGateway")
+	return
+}
+
+func NewUpgradeNatGatewayResponse() (response *UpgradeNatGatewayResponse) {
+	response = &UpgradeNatGatewayResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) UpgradeNatGateway(request *UpgradeNatGatewayRequest) (response *UpgradeNatGatewayResponse, err error) {
+	if request == nil {
+		request = NewUpgradeNatGatewayRequest()
+	}
+	response = NewUpgradeNatGatewayResponse()
+	err = c.Send(request, response)
+	return
+}
