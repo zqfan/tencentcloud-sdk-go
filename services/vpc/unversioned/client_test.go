@@ -335,3 +335,15 @@ func TestDnatRuleCRUD(t *testing.T) {
 		return
 	}
 }
+
+func TestDescribeNetworkInterfaces(t *testing.T) {
+	c, _ := newClient()
+	req := NewDescribeNetworkInterfacesRequest()
+	resp, err := c.DescribeNetworkInterfaces(req)
+	respJson, _ := json.Marshal(resp)
+	t.Logf("desc network interface resp=%s", respJson)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+}

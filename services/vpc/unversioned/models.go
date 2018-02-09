@@ -306,6 +306,59 @@ type UpgradeNatGatewayResponse struct {
 	BillId   *string `json:"billId"`
 }
 
+type DescribeNetworkInterfacesRequest struct {
+	*common.BaseRequest
+	VpcId              *string `name:"vpcId"`
+	NetworkInterfaceId *string `name:"networkInterfaceId"`
+	EniName            *string `name:"eniName"`
+	EniDescription     *string `name:"eniDescription"`
+	InstanceId         *string `name:"instanceId"`
+	Offset             *int    `name:"offset"`
+	Limit              *int    `name:"limit"`
+	OrderField         *string `name:"orderField"`
+	OrderDirection     *string `name:"orderDirection"`
+}
+
+type DescribeNetworkInterfacesResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	CodeDesc *string `json:"codeDesc"`
+	Message  *string `json:"message"`
+	Data     *struct {
+		Data []*struct {
+			CreateTime     *string   `json:"createTime"`
+			EniDescription *string   `json:"eniDescription"`
+			EniName        *string   `json:"eniName"`
+			FlowLogsSet    []*string `json:"flowLogsSet"`
+			GroupSet       []*struct {
+				SgId      *string `json:"sgId"`
+				SgName    *string `json:"sgName"`
+				ProjectId *string `json:"projectId"`
+			} `json:"groupSet"`
+			InstanceSet *struct {
+				InstanceId *string `json:"instanceId"`
+				AttachTime *string `json:"attachTime"`
+			} `json:"instanceSet"`
+			MacAddress            *string `json:"macAddress"`
+			NetworkInterfaceId    *string `json:"networkInterfaceId"`
+			Primary               *bool   `json:"primary"`
+			PrivateIpAddressesSet []*struct {
+				Description      *string `json:"description"`
+				EipId            *string `json:"eipId"`
+				IsWanIpBlocked   *bool   `json:"isWanIpBlocked"`
+				Primary          *bool   `json:"primary"`
+				PrivateIpAddress *string `json:"privateIpAddress"`
+				WanIp            *string `json:"wanIp"`
+			} `json:"privateIpAddressesSet"`
+			SubnetId *string `json:"subnetId"`
+			VpcId    *string `json:"vpcId"`
+			VpcName  *string `json:"vpcName"`
+			ZoneId   *int    `json:"zoneId"`
+		} `json:"data"`
+		TotalNum *int `json:"totalNum"`
+	} `json:"data"`
+}
+
 type Request struct {
 	*common.BaseRequest
 }

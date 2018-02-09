@@ -126,6 +126,30 @@ func (c *Client) DescribeNatGateway(request *DescribeNatGatewayRequest) (respons
 	return
 }
 
+func NewDescribeNetworkInterfacesRequest() (request *DescribeNetworkInterfacesRequest) {
+	request = &DescribeNetworkInterfacesRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("vpc", APIVersion, "DescribeNetworkInterfaces")
+	return
+}
+
+func NewDescribeNetworkInterfacesResponse() (response *DescribeNetworkInterfacesResponse) {
+	response = &DescribeNetworkInterfacesResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DescribeNetworkInterfaces(request *DescribeNetworkInterfacesRequest) (response *DescribeNetworkInterfacesResponse, err error) {
+	if request == nil {
+		request = NewDescribeNetworkInterfacesRequest()
+	}
+	response = NewDescribeNetworkInterfacesResponse()
+	err = c.Send(request, response)
+	return
+}
+
 func NewDescribeVpcExRequest() (request *DescribeVpcExRequest) {
 	request = &DescribeVpcExRequest{
 		BaseRequest: &common.BaseRequest{},
