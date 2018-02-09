@@ -206,14 +206,14 @@ type GetDnaptRuleRequest struct {
 type DnaptRule struct {
 	CreateTime  *string `json:"createTime"`
 	Description *string `json:"description"`
-	Eip         *string `json:"eip" name:"eip"`
-	Eport       *int    `json:"eport" name:"eport"`
+	Eip         *string `json:"eip"`
+	Eport       *int    `json:"eport"`
 	NatId       *int    `json:"natId"`
 	Owner       *string `json:"owner"`
 	Pip         *string `json:"pip"`
 	PipType     *int    `json:"pipType"`
 	Pport       *int    `json:"pport"`
-	Proto       *string `json:"proto" name:"proto"`
+	Proto       *string `json:"proto"`
 	UniqNatId   *string `json:"uniqNatId"`
 	UniqVpcId   *string `json:"uniqVpcId"`
 	VpcId       *int    `json:"vpcId"`
@@ -236,9 +236,9 @@ type AddDnaptRuleRequest struct {
 	NatId       *string `name:"natId"`
 	Proto       *string `name:"proto"`
 	Eip         *string `name:"eip"`
-	Eport       *int    `name:"eport"`
+	Eport       *string `name:"eport"`
 	Pip         *string `name:"pip"`
-	Pport       *int    `name:"pport"`
+	Pport       *string `name:"pport"`
 	Description *string `name:"description"`
 }
 
@@ -251,11 +251,17 @@ type AddDnaptRuleResponse struct {
 	} `json:"data"`
 }
 
+type DnaptRuleInput struct {
+	Eip   *string `name:"eip"`
+	Eport *string `name:"eport"`
+	Proto *string `name:"proto"`
+}
+
 type DeleteDnaptRuleRequest struct {
 	*common.BaseRequest
-	VpcId    *string      `name:"vpcId"`
-	NatId    *string      `name:"natId"`
-	DnatList []*DnaptRule `name:"dnatList" list`
+	VpcId    *string           `name:"vpcId"`
+	NatId    *string           `name:"natId"`
+	DnatList []*DnaptRuleInput `name:"dnatList" list`
 }
 
 type DeleteDnaptRuleResponse struct {
@@ -273,12 +279,12 @@ type ModifyDnaptRuleRequest struct {
 	NatId       *string `name:"natId"`
 	OldProto    *string `name:"oldProto"`
 	OldEip      *string `name:"oldEip"`
-	OldEport    *int    `name:"oldEport"`
+	OldEport    *string `name:"oldEport"`
 	Proto       *string `name:"proto"`
 	Eip         *string `name:"eip"`
-	Eport       *int    `name:"eport"`
+	Eport       *string `name:"eport"`
 	Pip         *string `name:"pip"`
-	Pport       *int    `name:"pport"`
+	Pport       *string `name:"pport"`
 	Description *string `name:"description"`
 }
 
