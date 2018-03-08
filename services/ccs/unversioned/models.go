@@ -80,6 +80,11 @@ type CreateClusterRequest struct {
 	KeyId                     *string `name:"keyId"`
 	Period                    *int    `name:"period"`
 	SgId                      *string `name:"sgId"`
+	MountTarget		  *string  `name:"mountTarget"`
+	DockerGraphPath		  *string  `name:"dockerGraphPath"`
+	InstanceName		  *string  `name:"instanceName"`
+	ClusterVersion		  *string  `name:"clusterVersion"`
+	ProjectId		  *int     `name:"projectId"`
 }
 
 type CreateClusterResponse struct {
