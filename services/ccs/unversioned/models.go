@@ -180,8 +180,6 @@ type AddClusterInstancesRequest struct {
 	KeyId         *string `name:"keyId"`
 	Period        *int    `name:"period"`
 	SgId          *string `name:"sgId"`
-	CvmType       *string  `name:"cvmType"`
-	Period	      *int `name:"period"`
 	MountTarget   *string `name:"mountTarget"`
 	DockerGraphPath  *string `name:"dockerGraphPath"`
 }
