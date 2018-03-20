@@ -137,7 +137,7 @@ type ClusterInstance struct {
 	IsNormal             *int               `json:"isNormal"`
 	KernelVersion        *string            `json:"kernelVersion"`
 	Labels               *map[string]string `json:"labels"`
-	LanIp                *string            `json"lanIp"`
+	LanIp                *string            `json:"lanIp"`
 	Mem                  *int               `json:"mem"`
 	NetworkPayMode       *int               `json:"networkPayMode"`
 	OSImage              *string            `json:"osImage"`
