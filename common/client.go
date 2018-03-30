@@ -35,7 +35,11 @@ func (c *Client) Send(request Request, response Response) (err error) {
 		httpRequest.Header["Content-Type"] = []string{"application/x-www-form-urlencoded"}
 	}
 	log.Printf("[DEBUG] http request=%v", httpRequest)
-	httpResponse, err := c.httpClient.Do(httpRequest)
+	var httpResponse *http.Response
+	httpResponse, err = c.httpClient.Do(httpRequest)
+	if err != nil {
+		return
+	}
 	err = ParseFromHttpResponse(httpResponse, response)
 	return
 }
