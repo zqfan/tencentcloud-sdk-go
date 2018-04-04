@@ -339,7 +339,7 @@ type DescribeNetworkInterfacesResponse struct {
 			GroupSet       []*struct {
 				SgId      *string `json:"sgId"`
 				SgName    *string `json:"sgName"`
-				ProjectId *string `json:"projectId"`
+				ProjectId *int    `json:"projectId"`
 			} `json:"groupSet"`
 			InstanceSet *struct {
 				InstanceId *string `json:"instanceId"`
