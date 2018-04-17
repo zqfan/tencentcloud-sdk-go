@@ -6,7 +6,6 @@ import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 	"os"
-	"strconv"
 	"testing"
 	"time"
 )
@@ -278,7 +277,7 @@ func TestDnatRuleCRUD(t *testing.T) {
 	addReq.Proto = common.StringPtr("tcp")
 	addReq.Eip = natDescResp.Data[0].EipSet[0]
 	addReq.Eport = common.StringPtr("80")
-	addReq.Pip = common.StringPtr("172.16.16.6")
+	addReq.Pip = common.StringPtr("172.16.16.5")
 	addReq.Pport = common.StringPtr("80")
 	addResp, err := c.AddDnaptRule(addReq)
 	addJson, _ := json.Marshal(addResp)
@@ -304,12 +303,12 @@ func TestDnatRuleCRUD(t *testing.T) {
 	updateReq.VpcId = natDescResp.Data[0].UnVpcId
 	updateReq.OldProto = descResp.Data.Detail[0].Proto
 	updateReq.OldEip = descResp.Data.Detail[0].Eip
-	updateReq.OldEport = common.StringPtr(strconv.Itoa(*descResp.Data.Detail[0].Eport))
+	updateReq.OldEport = descResp.Data.Detail[0].Eport
 	updateReq.Proto = common.StringPtr("udp")
 	updateReq.Eip = descResp.Data.Detail[0].Eip
-	updateReq.Eport = common.StringPtr(strconv.Itoa(*descResp.Data.Detail[0].Eport))
+	updateReq.Eport = descResp.Data.Detail[0].Eport
 	updateReq.Pip = descResp.Data.Detail[0].Pip
-	updateReq.Pport = common.StringPtr(strconv.Itoa(*descResp.Data.Detail[0].Pport))
+	updateReq.Pport = descResp.Data.Detail[0].Pport
 	updateResp, err := c.ModifyDnaptRule(updateReq)
 	updateJson, _ := json.Marshal(updateResp)
 	t.Logf("dnat rule desc resp=%s", updateJson)
@@ -326,7 +325,7 @@ func TestDnatRuleCRUD(t *testing.T) {
 	delReq.DnatList = []*DnaptRuleInput{
 		&DnaptRuleInput{
 			Eip:   descResp.Data.Detail[0].Eip,
-			Eport: common.StringPtr(strconv.Itoa(*descResp.Data.Detail[0].Eport)),
+			Eport: descResp.Data.Detail[0].Eport,
 			Proto: descResp.Data.Detail[0].Proto,
 		},
 	}
