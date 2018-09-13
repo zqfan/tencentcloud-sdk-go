@@ -130,6 +130,8 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 			PkgName:    "lb",
 			APIVersion: "",
 			Actions: []Action{
+				{"CreateLoadBalancer", "lb"},
+				{"DeleteLoadBalancers", "lb"},
 				{"DescribeForwardLBBackends", "lb"},
 				{"DescribeForwardLBListeners", "lb"},
 				{"DescribeLoadBalancers", "lb"},

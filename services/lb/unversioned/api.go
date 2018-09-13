@@ -1,10 +1,58 @@
-package lb
+package unversioned
 
 import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 )
 
 const APIVersion = ""
+
+func NewCreateLoadBalancerRequest() (request *CreateLoadBalancerRequest) {
+	request = &CreateLoadBalancerRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("lb", APIVersion, "CreateLoadBalancer")
+	return
+}
+
+func NewCreateLoadBalancerResponse() (response *CreateLoadBalancerResponse) {
+	response = &CreateLoadBalancerResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (response *CreateLoadBalancerResponse, err error) {
+	if request == nil {
+		request = NewCreateLoadBalancerRequest()
+	}
+	response = NewCreateLoadBalancerResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteLoadBalancersRequest() (request *DeleteLoadBalancersRequest) {
+	request = &DeleteLoadBalancersRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("lb", APIVersion, "DeleteLoadBalancers")
+	return
+}
+
+func NewDeleteLoadBalancersResponse() (response *DeleteLoadBalancersResponse) {
+	response = &DeleteLoadBalancersResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) DeleteLoadBalancers(request *DeleteLoadBalancersRequest) (response *DeleteLoadBalancersResponse, err error) {
+	if request == nil {
+		request = NewDeleteLoadBalancersRequest()
+	}
+	response = NewDeleteLoadBalancersResponse()
+	err = c.Send(request, response)
+	return
+}
 
 func NewDescribeForwardLBBackendsRequest() (request *DescribeForwardLBBackendsRequest) {
 	request = &DescribeForwardLBBackendsRequest{

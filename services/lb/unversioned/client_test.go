@@ -1,4 +1,4 @@
-package lb
+package unversioned
 
 import (
 	"encoding/json"
@@ -19,7 +19,36 @@ func newClient() (*Client, error) {
 
 func TestLBCRUD(t *testing.T) {
 	c, _ := newClient()
+	createReq := NewCreateLoadBalancerRequest()
+	createReq.LoadBalancerType = common.IntPtr(LBNetworkTypePublic)
+	createResp, err := c.CreateLoadBalancer(createReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	b, _ := json.Marshal(createResp)
+	t.Logf("lb create resp=%s", b)
+	lbid := (*createResp.UnLoadBalancerIds)[*createResp.DealIds[0]][0]
 	descReq := NewDescribeLoadBalancersRequest()
+	descResp, err := c.DescribeLoadBalancers(descReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	b, _ = json.Marshal(descResp)
+	t.Logf("lb desc resp=%s", b)
+	waitForLB(lbid, c, t)
+	delReq := NewDeleteLoadBalancersRequest()
+	delReq.LoadBalancerIds = []*string{lbid}
+	delResp, _ := c.DeleteLoadBalancers(delReq)
+	b, _ = json.Marshal(descResp)
+	t.Logf("lb delete resp=%s", b)
+	waitForTask(delResp.RequestId, c, t)
+}
+
+func waitForLB(lbid *string, c *Client, t *testing.T) {
+	descReq := NewDescribeLoadBalancersRequest()
+	descReq.LoadBalancerIds = []*string{lbid}
 	descResp, err := c.DescribeLoadBalancers(descReq)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("[ERROR] err=%v", err)
@@ -27,6 +56,31 @@ func TestLBCRUD(t *testing.T) {
 	}
 	b, _ := json.Marshal(descResp)
 	t.Logf("lb desc resp=%s", b)
+	if *descResp.LoadBalancerSet[0].Status == LBStatusCreating {
+		time.Sleep(10 * time.Second)
+		waitForLB(lbid, c, t)
+	}
+}
+
+func waitForTask(r *int, c *Client, t *testing.T) {
+	taskReq := NewDescribeLoadBalancersTaskResultRequest()
+	taskReq.RequestId = r
+	for {
+		taskResp, err := c.DescribeLoadBalancersTaskResult(taskReq)
+		if _, ok := err.(*common.APIError); ok {
+			t.Errorf("[ERROR] err=%v", err)
+			return
+		}
+		taskJson, _ := json.Marshal(taskResp)
+		t.Logf("task desc resp=%s", taskJson)
+		if *taskResp.Data.Status == LBTaskSuccess {
+			break
+		} else if *taskResp.Data.Status == LBTaskFail {
+			t.Errorf("[ERROR] Task %d failed", *r)
+			return
+		}
+		time.Sleep(10 * time.Second)
+	}
 }
 
 func TestListenerCRUD(t *testing.T) {
