@@ -174,6 +174,54 @@ func (c *Client) DeregisterInstancesFromForwardLB(request *DeregisterInstancesFr
 	return
 }
 
+func NewModifyForwardLBNameRequest() (request *ModifyForwardLBNameRequest) {
+	request = &ModifyForwardLBNameRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("lb", APIVersion, "ModifyForwardLBName")
+	return
+}
+
+func NewModifyForwardLBNameResponse() (response *ModifyForwardLBNameResponse) {
+	response = &ModifyForwardLBNameResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) ModifyForwardLBName(request *ModifyForwardLBNameRequest) (response *ModifyForwardLBNameResponse, err error) {
+	if request == nil {
+		request = NewModifyForwardLBNameRequest()
+	}
+	response = NewModifyForwardLBNameResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyLoadBalancerAttributesRequest() (request *ModifyLoadBalancerAttributesRequest) {
+	request = &ModifyLoadBalancerAttributesRequest{
+		BaseRequest: &common.BaseRequest{},
+	}
+	request.Init().WithApiInfo("lb", APIVersion, "ModifyLoadBalancerAttributes")
+	return
+}
+
+func NewModifyLoadBalancerAttributesResponse() (response *ModifyLoadBalancerAttributesResponse) {
+	response = &ModifyLoadBalancerAttributesResponse{
+		BaseResponse: &common.BaseResponse{},
+	}
+	return
+}
+
+func (c *Client) ModifyLoadBalancerAttributes(request *ModifyLoadBalancerAttributesRequest) (response *ModifyLoadBalancerAttributesResponse, err error) {
+	if request == nil {
+		request = NewModifyLoadBalancerAttributesRequest()
+	}
+	response = NewModifyLoadBalancerAttributesResponse()
+	err = c.Send(request, response)
+	return
+}
+
 func NewRegisterInstancesWithForwardLBSeventhListenerRequest() (request *RegisterInstancesWithForwardLBSeventhListenerRequest) {
 	request = &RegisterInstancesWithForwardLBSeventhListenerRequest{
 		BaseRequest: &common.BaseRequest{},

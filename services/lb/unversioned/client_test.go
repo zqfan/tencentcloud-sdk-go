@@ -2,11 +2,12 @@ package unversioned
 
 import (
 	"encoding/json"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/zqfan/tencentcloud-sdk-go/common"
+	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 )
 
 func newClient() (*Client, error) {
@@ -15,6 +16,50 @@ func newClient() (*Client, error) {
 		os.Getenv("TENCENTCLOUD_SECRET_KEY"),
 		"ap-guangzhou",
 	)
+}
+
+func TestFowardLBCRUD(t *testing.T) {
+	c, _ := newClient()
+	createReq := NewCreateLoadBalancerRequest()
+	createReq.Forward = common.IntPtr(LBForwardTypeApplication)
+	createReq.LoadBalancerType = common.IntPtr(LBNetworkTypePublic)
+	createReq.LoadBalancerName = common.StringPtr("zqfan-sdk-test")
+	//createReq.VpcId = common.StringPtr("vpc-8ek64x3d")
+	//createReq.SubnetId = common.IntPtr(278667)
+	createResp, err := c.CreateLoadBalancer(createReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	b, _ := json.Marshal(createResp)
+	t.Logf("lb create resp=%s", b)
+	lbid := (*createResp.UnLoadBalancerIds)[*createResp.DealIds[0]][0]
+	descReq := NewDescribeLoadBalancersRequest()
+	descReq.LoadBalancerIds = []*string{lbid}
+	descResp, err := c.DescribeLoadBalancers(descReq)
+	if _, ok := err.(*common.APIError); ok {
+		t.Errorf("[ERROR] err=%v", err)
+		return
+	}
+	b, _ = json.Marshal(descResp)
+	t.Logf("lb desc resp=%s", b)
+	WaitForLBReady(lbid, c, 10)
+
+	modifyReq := NewModifyForwardLBNameRequest()
+	modifyReq.LoadBalancerId = lbid
+	modifyReq.LoadBalancerName = common.StringPtr("zqfan-sdk-test-modified")
+	_, err = c.ModifyForwardLBName(modifyReq)
+	descResp, err = c.DescribeLoadBalancers(descReq)
+	if *descResp.LoadBalancerSet[0].LoadBalancerName != "zqfan-sdk-test-modified" {
+		t.Errorf("[ERROR] modify lb failed")
+	}
+
+	delReq := NewDeleteLoadBalancersRequest()
+	delReq.LoadBalancerIds = []*string{lbid}
+	delResp, _ := c.DeleteLoadBalancers(delReq)
+	b, _ = json.Marshal(descResp)
+	t.Logf("lb delete resp=%s", b)
+	WaitForTaskSuccess(delResp.RequestId, c, 10)
 }
 
 func TestLBCRUD(t *testing.T) {
@@ -33,6 +78,7 @@ func TestLBCRUD(t *testing.T) {
 	t.Logf("lb create resp=%s", b)
 	lbid := (*createResp.UnLoadBalancerIds)[*createResp.DealIds[0]][0]
 	descReq := NewDescribeLoadBalancersRequest()
+	descReq.LoadBalancerIds = []*string{lbid}
 	descResp, err := c.DescribeLoadBalancers(descReq)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("[ERROR] err=%v", err)
@@ -41,6 +87,17 @@ func TestLBCRUD(t *testing.T) {
 	b, _ = json.Marshal(descResp)
 	t.Logf("lb desc resp=%s", b)
 	WaitForLBReady(lbid, c, 10)
+
+	modifyReq := NewModifyLoadBalancerAttributesRequest()
+	modifyReq.LoadBalancerId = lbid
+	modifyReq.LoadBalancerName = common.StringPtr("zqfan-sdk-test-modified")
+	modifyResp, err := c.ModifyLoadBalancerAttributes(modifyReq)
+	WaitForTaskSuccess(modifyResp.RequestId, c, 10)
+	descResp, err = c.DescribeLoadBalancers(descReq)
+	if *descResp.LoadBalancerSet[0].LoadBalancerName != "zqfan-sdk-test-modified" {
+		t.Errorf("[ERROR] modify lb failed")
+	}
+
 	delReq := NewDeleteLoadBalancersRequest()
 	delReq.LoadBalancerIds = []*string{lbid}
 	delResp, _ := c.DeleteLoadBalancers(delReq)

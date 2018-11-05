@@ -287,6 +287,34 @@ type DeleteLoadBalancersResponse struct {
 	RequestId *int    `json:"requestId"`
 }
 
+type ModifyForwardLBNameRequest struct {
+	*common.BaseRequest
+	LoadBalancerId   *string `name:"loadBalancerId"`
+	LoadBalancerName *string `name:"loadBalancerName"`
+}
+
+type ModifyForwardLBNameResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+}
+
+type ModifyLoadBalancerAttributesRequest struct {
+	*common.BaseRequest
+	LoadBalancerId   *string `name:"loadBalancerId"`
+	LoadBalancerName *string `name:"loadBalancerName"`
+	DomainPrefix     *string `name:"domainPrefix"`
+}
+
+type ModifyLoadBalancerAttributesResponse struct {
+	*common.BaseResponse
+	Code      *int    `json:"code"`
+	Message   *string `json:"message"`
+	CodeDesc  *string `json:"codeDesc"`
+	RequestId *int    `json:"requestId"`
+}
+
 type Request struct {
 	*common.BaseRequest
 }

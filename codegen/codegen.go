@@ -137,6 +137,8 @@ func (c *Client) {{.Action}}(request *{{.Action}}Request) (response *{{.Action}}
 				{"DescribeLoadBalancers", "lb"},
 				{"DescribeLoadBalancersTaskResult", "lb"},
 				{"DeregisterInstancesFromForwardLB", "lb"},
+				{"ModifyForwardLBName", "lb"},
+				{"ModifyLoadBalancerAttributes", "lb"},
 				{"RegisterInstancesWithForwardLBSeventhListener", "lb"},
 			},
 		},
