@@ -21,6 +21,9 @@ func TestLBCRUD(t *testing.T) {
 	c, _ := newClient()
 	createReq := NewCreateLoadBalancerRequest()
 	createReq.LoadBalancerType = common.IntPtr(LBNetworkTypePublic)
+	createReq.LoadBalancerName = common.StringPtr("zqfan-sdk-test")
+	//createReq.VpcId = common.StringPtr("vpc-8ek64x3d")
+	//createReq.SubnetId = common.IntPtr(278667)
 	createResp, err := c.CreateLoadBalancer(createReq)
 	if _, ok := err.(*common.APIError); ok {
 		t.Errorf("[ERROR] err=%v", err)
@@ -37,13 +40,13 @@ func TestLBCRUD(t *testing.T) {
 	}
 	b, _ = json.Marshal(descResp)
 	t.Logf("lb desc resp=%s", b)
-	waitForLB(lbid, c, t)
+	WaitForLBReady(lbid, c, 10)
 	delReq := NewDeleteLoadBalancersRequest()
 	delReq.LoadBalancerIds = []*string{lbid}
 	delResp, _ := c.DeleteLoadBalancers(delReq)
 	b, _ = json.Marshal(descResp)
 	t.Logf("lb delete resp=%s", b)
-	waitForTask(delResp.RequestId, c, t)
+	WaitForTaskSuccess(delResp.RequestId, c, 10)
 }
 
 func waitForLB(lbid *string, c *Client, t *testing.T) {
